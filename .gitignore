@@ -1,0 +1,13 @@
+# Stata temporary files
+*.stswp
+*.~*
+~*.dta
+*.dta.bak
+
+# Word documents
+*.doc
+*.docx
+
+# Data directories
+data/
+replication_data/

@@ -66,7 +66,7 @@ sensemakr d_extreme_right_share_valid treated mentions0708 roma_share2001 d.unem
 
 
 preserve
-append using ../data/processed/synth_did.dta
+append using ${temp}/synth_did.dta
 reg d_extreme_right_share_valid treated  if id!=., rob
 estadd local smpl "Synthetic"
 estadd local serr "Robust"

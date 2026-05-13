@@ -141,6 +141,7 @@ twoway `plots', ///
 
 				 graph export ${figuredir}/synth.png, replace
 				 				 graph export ${figuredir}/synth.pdf, replace
+				 graph export ${figuredir}/figure_oa6.pdf, replace
 
 				 
 				 
@@ -172,6 +173,7 @@ twoway bar diff avg_group  if _time==5, color(black)    ///
 	title("Effect heterogeneity in 2010") xsize(1) ysize(1.25) ylabel(-.1 "-10" 0 "0" .1 "10" .2 "20" )
 					 graph export ${figuredir}/synth_bar2010.png, replace
 					 graph export ${figuredir}/synth_bar2010.pdf, replace
+					 graph export ${figuredir}/figure_oa5.pdf, replace
 
 
 

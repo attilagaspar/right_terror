@@ -38,6 +38,7 @@ twoway (lfitci extreme_right_share_valid min_distance_to_planned if min_distance
 grc1leg p1 p2, title(" ") //Far right support as function of distance from realized and planned attacks" "(in valid votes) 
 graph export ${figuredir}/spatial_decay_bw.png, replace
 graph export ${figuredir}/spatial_decay_bw.pdf, replace
+graph export ${figuredir}/figure2.pdf, replace
 
 la var min_distance_to_planned "Distance to planned (km)"
 la var min_distance_to_realized "Distance to realized (km)"
@@ -47,4 +48,5 @@ esttab using ${tabledir}/spatial_figure_table.tex, replace ///
 	mtitles("2010" "2006" "2010" "2006") ///
 mgroups("Extreme right vote share, pp.", pattern(1 0 0 0)) ///	
 	 label nonotes star(* 0.10 ** 0.05 *** 0.01) staraux  se(3) b(3)
+copy "${tabledir}/spatial_figure_table.tex" "${tabledir}/table_oa7.tex", replace
 

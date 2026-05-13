@@ -135,8 +135,9 @@ esttab matrix(results) using "${tabledir}/balance_table_2.tex", replace ///
 	refcat(pop "\textbf{Demography}" taxpayers "\textbf{Local economy}" ig01 "\textbf{Crime}" min_distance_to_debrecen "\textbf{Terrorists' focus}", nolabel) ///
     label ///
 	nomtitles
-	
-	
-	*	mgroups("Attacked" "Whole country" "Donor pool" "Planned" "Synthetic pool", pattern(1 1 0 1 0 1 0 1 0)) ///
+copy "${tabledir}/balance_table_2.tex" "${tabledir}/table_oa3.tex", replace
+
+
+*	mgroups("Attacked" "Whole country" "Donor pool" "Planned" "Synthetic pool", pattern(1 1 0 1 0 1 0 1 0)) ///
 
 	

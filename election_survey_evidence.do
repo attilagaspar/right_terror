@@ -60,6 +60,7 @@ box(8, color(black%30))  ///
 box(9, color(black))  ///
 box(10, color(black%30)) 
 	graph export ${figuredir}/ethnic_groups.pdf, replace
+	graph export ${figuredir}/figure_oa1.pdf, replace
 
 restore
 
@@ -142,6 +143,7 @@ foreach v of varlist  e_5_5_9 {
 graph combine  bar_e_5_1_9 bar_e_5_2_9 bar_e_5_3_9 bar_e_5_4_9 bar_e_5_5_9  , col(1) row(5) xsize(1) ysize(1.3)   imargin(0 0 0 0) graphregion(margin(4 4 4 4))
 
 graph export ${figuredir}/roma_statements.pdf, replace
+graph export ${figuredir}/figure_oa2.pdf, replace
 
 
 preserve

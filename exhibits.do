@@ -72,9 +72,10 @@ esttab  using "${tabledir}/did1.tex", keep( treated _cons )  se(3) b(3) ///
    replace label nonotes   scalars(	"r2 $ R^2 $" N	"smpl Control group" ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
-			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles 
+			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+copy "${tabledir}/did1.tex" "${tabledir}/table1.tex", replace
 
-			
+
 la var treated "Attacked"
 la var mentions "Kuruc.info mentions before attack"
 la var roma_share2001 "Roma share in 2001"
@@ -124,8 +125,9 @@ esttab  using "${tabledir}/did1_appendix.tex",  se(3) b(3) ///
    replace label nonotes   scalars(	"r2 $ R^2 $" N	"smpl Control group" ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
-			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles 
-			
+			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+copy "${tabledir}/did1_appendix.tex" "${tabledir}/table_oa4.tex", replace
+
 
 /*
 
@@ -175,7 +177,8 @@ esttab  using "${tabledir}/did_appendix_pretrend.tex",  se(3) b(3) ///
    replace label nonotes   scalars(	"r2 $ R^2 $" N	"smpl Control group" ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
-			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles 
+			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+copy "${tabledir}/did_appendix_pretrend.tex" "${tabledir}/table_oa5.tex", replace
 
 
 

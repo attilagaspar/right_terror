@@ -84,9 +84,12 @@ esttab  using "${tabledir}/did1_`s'.tex", keep( treated _cons )  se(3) b(3) ///
    replace label nonotes   scalars(	"r2 $ R^2 $" N	"smpl Control group" ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
-			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles 
+			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+if "`s'"=="turnout" copy "${tabledir}/did1_`s'.tex" "${tabledir}/table_oa8.tex", replace
+if "`s'"=="szoc"    copy "${tabledir}/did1_`s'.tex" "${tabledir}/table_oa9.tex", replace
+if "`s'"=="fidesz"  copy "${tabledir}/did1_`s'.tex" "${tabledir}/table_oa10.tex", replace
 
-	
+
 }
 
 

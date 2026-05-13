@@ -147,8 +147,9 @@ mgroups("DV: Extreme right vote share, pp.", pattern(1 0 0 0)  ///
 	 scalars(	"r2 $ R^2 $" N	"smpl Control group" ///
 			"serr Standard errors" ///
 			"fe Fixed effects" ///
-			)    
-	 
+			)
+copy "${tabledir}/eventstudy.tex" "${tabledir}/table_oa6.tex", replace
+
 cap drop coef se t lower_ci upper_ci 
 gen coef = .
 gen se = .
@@ -193,4 +194,5 @@ leg(off) name(es3, replace) title("(B) Attacked vs. planned") xsize(1) ysize(1)
 graph combine  es1  es3 ,  xsize(2) ysize(1) col(2) 
 graph export ${figuredir}/combined_eventstudy.png, replace
 graph export ${figuredir}/combined_eventstudy.pdf, replace
+graph export ${figuredir}/figure1.pdf, replace
 

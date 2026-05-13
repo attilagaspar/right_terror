@@ -54,4 +54,5 @@ legend(order(1 "Hungary" 2 "Austria"  ///
 ytitle("Vote share gain of far-right parties" "relative to pre-crisis level (pp)") xlabel(2000 2004 2008 2012 2016 2020) xtitle("Election year")
  
 graph export ${figuredir}/farright.pdf, replace
+graph export ${figuredir}/figure_oa3.pdf, replace
  

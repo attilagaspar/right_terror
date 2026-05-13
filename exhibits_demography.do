@@ -115,6 +115,7 @@ esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _con
    replace label nonotes   scalars(	"r2 $ R^2 $" N	"smpl Control group" ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
-			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles 
+			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa11.tex", replace
 
 

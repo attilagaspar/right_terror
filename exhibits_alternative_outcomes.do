@@ -78,7 +78,7 @@ restore
 
 
 esttab  using "${tabledir}/did1_`s'.tex", keep( treated _cons )  se(3) b(3) ///
- mgroups("$\Delta$(Extreme right vote share 2010-2006, pp.) in 9 attacked settlements", pattern(1 0 0 ) ///
+ mgroups("$\Delta$(Vote share 2010-2006, pp.) in 9 attacked settlements", pattern(1 0 0 ) ///
  prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
   collabels(none)  ///
    replace label nonotes   scalars(	"r2 $ R^2 $" N	"smpl Control group" ///

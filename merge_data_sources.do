@@ -96,7 +96,7 @@ drop if merge_tstar==2  // these year-settlement combinations did not exist in t
 
 
 
-merge m:1 telnev_helyes using ../data/processed/treatment.dta, gen(merge_treatment)
+merge m:1 telnev_helyes using ${temp}/treatment.dta, gen(merge_treatment)
 
 drop if merge_treatment==2
 

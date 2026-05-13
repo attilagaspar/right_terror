@@ -149,6 +149,8 @@ do exhibits_demography.do
 *generates Table OA11 - additional controls
 
 * calculate Cinelli & Hazlett (2020) robustness values (Appendix G.2) 
+* IMPORTANT! These do not create additional tables or figures; 
+* Instead, it outputs a couple of numbers which then appear in the text.
 do regressions_sensemakr.do
 
 /*Figures*/

@@ -89,14 +89,17 @@ Results are saved to:
 
 ### Main Tables
 - **Table 1**: Main regression results
-- **Table OA2**: Synthetic control weights
-- **Table OA3**: Balance table
-- **Table OA4**: DiD with control variable coefficients
-- **Table OA5**: DiD pre-trends
-- **Table OA6**: Event study regression results
-- **Table OA7**: Spatial decay regression results
-- **Tables OA8-OA10**: Alternative outcomes (turnout, vote shares)
-- **Table OA11**: Additional demographic controls
+- **Table OA2**: Synthetic control weights (part 1)
+- **Table OA3**: Synthetic control weights (part 2)
+- **Table OA4**: Balance table
+- **Table OA5**: DiD with control variable coefficients
+- **Table OA6**: Pre-trend regression
+- **Table OA7**: Regression corresponding to Figure 1
+- **Table OA8**: Regression corresponding to Figure 2
+- **Table OA9**: Alternative outcome: turnout
+- **Table OA10**: Alternative outcome: left vote share
+- **Table OA11**: Alternative outcome: mainstream right vote share
+- **Table OA12**: Additional demographic controls
 
 ### Main Figures
 - **Figure 1**: Event study

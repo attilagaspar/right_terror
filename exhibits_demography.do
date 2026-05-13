@@ -116,6 +116,6 @@ esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _con
 			"serr Standard errors" ///
 			"controls Covariates" ///
 			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
-copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa11.tex", replace
+copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa12.tex", replace
 
 

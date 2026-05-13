@@ -126,7 +126,7 @@ esttab  using "${tabledir}/did1_appendix.tex",  se(3) b(3) ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
 			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
-copy "${tabledir}/did1_appendix.tex" "${tabledir}/table_oa4.tex", replace
+copy "${tabledir}/did1_appendix.tex" "${tabledir}/table_oa5.tex", replace
 
 
 /*
@@ -178,7 +178,7 @@ esttab  using "${tabledir}/did_appendix_pretrend.tex",  se(3) b(3) ///
 			"serr Standard errors" ///
 			"controls Covariates" ///
 			)    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
-copy "${tabledir}/did_appendix_pretrend.tex" "${tabledir}/table_oa5.tex", replace
+copy "${tabledir}/did_appendix_pretrend.tex" "${tabledir}/table_oa6.tex", replace
 
 
 

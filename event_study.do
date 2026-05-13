@@ -148,7 +148,7 @@ mgroups("DV: Extreme right vote share, pp.", pattern(1 0 0 0)  ///
 			"serr Standard errors" ///
 			"fe Fixed effects" ///
 			)
-copy "${tabledir}/eventstudy.tex" "${tabledir}/table_oa6.tex", replace
+copy "${tabledir}/eventstudy.tex" "${tabledir}/table_oa7.tex", replace
 
 cap drop coef se t lower_ci upper_ci 
 gen coef = .

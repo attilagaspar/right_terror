@@ -48,5 +48,5 @@ esttab using ${tabledir}/spatial_figure_table.tex, replace ///
 	mtitles("2010" "2006" "2010" "2006") ///
 mgroups("Extreme right vote share, pp.", pattern(1 0 0 0)) ///	
 	 label nonotes star(* 0.10 ** 0.05 *** 0.01) staraux  se(3) b(3)
-copy "${tabledir}/spatial_figure_table.tex" "${tabledir}/table_oa7.tex", replace
+copy "${tabledir}/spatial_figure_table.tex" "${tabledir}/table_oa8.tex", replace
 

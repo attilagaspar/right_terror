@@ -48,11 +48,11 @@ replace _W_Weight = _W_Weight + " \\"
 preserve
 keep if _n<=46
 listtex using "${tabledir}/synthetic_control_units_1.tex", replace
-copy "${tabledir}/synthetic_control_units_1.tex" "${tabledir}/table_oa2_1.tex", replace
+copy "${tabledir}/synthetic_control_units_1.tex" "${tabledir}/table_oa2.tex", replace
 restore, preserve
 keep if _n>46
 listtex using "${tabledir}/synthetic_control_units_2.tex", replace
-copy "${tabledir}/synthetic_control_units_2.tex" "${tabledir}/table_oa2_2.tex", replace
+copy "${tabledir}/synthetic_control_units_2.tex" "${tabledir}/table_oa3.tex", replace
 restore
 
 keep _Co_name

@@ -45,8 +45,6 @@ cap rm "${temp}/synth/*.dta"  // delete temporary files
 		local popmax =  `popmean'*1.3
 		
 		egen pm = mean(pop), by(telnev_helyes)
-		*keep if (pm>`popmin'&pm<`popmax'&min_distance_to_realized>100)|telnev_helyes=="`s'"
-		*keep if (pm>`popmin'&pm<`popmax'&min_distance_to_realized>100)|telnev_helyes=="`s'"
 		keep if (donor_pool==1&min_distance_to_realized>100)|telnev_helyes=="`s'"
 		* drop other treated vars
 *		keep if (inrange(pop,800,1200)&min_distance_to_realized>200)|telnev_helyes=="`s'"

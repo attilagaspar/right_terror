@@ -91,3 +91,388 @@ end of do-file
 . 
 end of do-file
 
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. gen tokeep=0
+
+. 
+. foreach s in "Galgagyörk" "Piricse" "Nyíradony" "Tarnabod" "Nagycsécs" "Alsózsolca" ///
+>         "Tatárszentgyörgy" "Tiszalök" "Kisléta"  "Ipolytarnóc" "Kisvárda" "Tura" "Erdőkertes" "
+> Debrecen" "Budapest" {
+  2.                 disp "`s'"
+  3.                 replace tokeep = 1
+  4.         }
+Galgagyörk
+(12,723,489 real changes made)
+Piricse
+(0 real changes made)
+Nyíradony
+(0 real changes made)
+Tarnabod
+(0 real changes made)
+Nagycsécs
+(0 real changes made)
+Alsózsolca
+(0 real changes made)
+Tatárszentgyörgy
+(0 real changes made)
+Tiszalök
+(0 real changes made)
+Kisléta
+(0 real changes made)
+Ipolytarnóc
+(0 real changes made)
+Kisvárda
+(0 real changes made)
+Tura
+(0 real changes made)
+Erdőkertes
+(0 real changes made)
+Debrecen
+(0 real changes made)
+Budapest
+(0 real changes made)
+
+.         
+. keep if tokeep==1
+(0 observations deleted)
+
+. 
+end of do-file
+
+. import delimited "C:\Users\agaspar\Dropbox\research\rightterror_legacy\raw_data\distances\plain
+> -text.csv", clear 
+(encoding automatically selected: UTF-8)
+(5 vars, 12,723,489 obs)
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. gen tokeep=0
+
+. 
+. foreach s in "Galgagyörk" "Piricse" "Nyíradony" "Tarnabod" "Nagycsécs" "Alsózsolca" ///
+>         "Tatárszentgyörgy" "Tiszalök" "Kisléta"  "Ipolytarnóc" "Kisvárda" "Tura" "Erdőkertes" "
+> Debrecen" "Budapest" {
+  2.                 disp "`s'"
+  3.                 replace tokeep = 1  if fromname=="`s'"
+  4.         }
+Galgagyörk
+(3,567 real changes made)
+Piricse
+(3,567 real changes made)
+Nyíradony
+(10,701 real changes made)
+Tarnabod
+(3,567 real changes made)
+Nagycsécs
+(3,567 real changes made)
+Alsózsolca
+(3,567 real changes made)
+Tatárszentgyörgy
+(3,567 real changes made)
+Tiszalök
+(7,134 real changes made)
+Kisléta
+(3,567 real changes made)
+Ipolytarnóc
+(3,567 real changes made)
+Kisvárda
+(3,567 real changes made)
+Tura
+(3,567 real changes made)
+Erdőkertes
+(3,567 real changes made)
+Debrecen
+(60,639 real changes made)
+Budapest
+(581,421 real changes made)
+
+.         
+. keep if tokeep==1
+(12,024,357 observations deleted)
+
+. 
+end of do-file
+
+. count
+  699,132
+
+. export delimited using "C:\Users\agaspar\Dropbox\research\rightterror\data\distances\distances.
+> csv", replace
+(file C:\Users\agaspar\Dropbox\research\rightterror\data\distances\distances.csv not found)
+file C:\Users\agaspar\Dropbox\research\rightterror\data\distances\distances.csv saved
+
+. do "C:\Users\agaspar\Dropbox\research\rightterror\replication_package\create_treatment_var.do"
+
+. /*
+> 
+>         This script sets up a data file that marks planned and realized attacks
+>         and distances to planned attacks and realized attacks by settlement
+>         
+> */
+. 
+. 
+. import delimited "${distances}/distances.csv", clear
+(encoding automatically selected: UTF-8)
+(6 vars, 699,132 obs)
+
+. 
+. gen realized = 0
+
+. 
+. foreach s in "Galgagyörk" "Piricse" "Nyíradony" "Tarnabod" "Nagycsécs" "Alsózsolca" ///
+>         "Tatárszentgyörgy" "Tiszalök" "Kisléta" {
+  2.                 disp "`s'"
+  3.                 replace realized = 1 if fromname=="`s'"
+  4.                 gen distance_to_`s' = distancemeters if fromname=="`s'"
+  5.         }
+Galgagyörk
+(3,567 real changes made)
+(695,565 missing values generated)
+Piricse
+(3,567 real changes made)
+(695,565 missing values generated)
+Nyíradony
+(10,701 real changes made)
+(688,431 missing values generated)
+Tarnabod
+(3,567 real changes made)
+(695,565 missing values generated)
+Nagycsécs
+(3,567 real changes made)
+(695,565 missing values generated)
+Alsózsolca
+(3,567 real changes made)
+(695,565 missing values generated)
+Tatárszentgyörgy
+(3,567 real changes made)
+(695,565 missing values generated)
+Tiszalök
+(7,134 real changes made)
+(691,998 missing values generated)
+Kisléta
+(3,567 real changes made)
+(695,565 missing values generated)
+
+.         
+. gen planned = 0
+
+. foreach s in "Ipolytarnóc" "Kisvárda" "Tura" "Erdőkertes" {
+  2.         disp "`s'"
+  3.         replace planned = 1 if fromname=="`s'"
+  4.         gen distance_to_`s' = distancemeters if fromname=="`s'"
+  5. } 
+Ipolytarnóc
+(3,567 real changes made)
+(695,565 missing values generated)
+Kisvárda
+(3,567 real changes made)
+(695,565 missing values generated)
+Tura
+(3,567 real changes made)
+(695,565 missing values generated)
+Erdőkertes
+(3,567 real changes made)
+(695,565 missing values generated)
+
+. 
+. gen debrecen = 0
+
+. replace debrecen = 1 if fromname=="Debrecen"
+(60,639 real changes made)
+
+. gen budapest = 0
+
+. replace budapest = 1 if fromname=="Budapest"
+(581,421 real changes made)
+
+. 
+. keep if planned==1|realized==1|debrecen==1|budapest==1
+(0 observations deleted)
+
+. 
+. egen min_distance_to_planned = min(distancemeters) if planned==1, by(toname)
+(684,864 missing values generated)
+
+. egen min_distance_to_realized = min(distancem) if realized==1, by(toname)
+(656,328 missing values generated)
+
+. egen min_distance_to_budapest = min(distancem) if budapest==1, by(toname)
+(117,711 missing values generated)
+
+. egen min_distance_to_debrecen = min(distancem) if debrecen==1, by(toname)
+(638,493 missing values generated)
+
+. 
+. collapse (min) min_distance_to_* distance_to_*, by(toname)
+
+. 
+. foreach v of varlist min_distance_to_* distance_to* {
+  2.         
+.         replace `v'=round(`v'/1000)
+  3.         
+. }
+(3,151 real changes made)
+(3,146 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+(3,154 real changes made)
+
+. 
+. 
+. gen planned=1 if min_distance_to_planned==0
+(3,151 missing values generated)
+
+. gen realized=1 if min_distance_to_realized==0
+(3,146 missing values generated)
+
+. 
+. replace planned=0 if planned==.
+(3,151 real changes made)
+
+. replace realized=0 if realized==.
+(3,146 real changes made)
+
+. 
+. rename toname telnev_helyes
+
+. save ${temp}/treatment.dta, replace
+file ../replication_data/treatment.dta saved
+
+. 
+end of do-file
+
+. do "C:\Users\agaspar\Dropbox\research\rightterror_legacy\raw_data\tstar\tstar_filter.do"
+
+. use "../data/tstar/2018/de.dta", clear
+
+. keep ev tazon de55 de56 de62 de63 //élveszületés halálozások, elvándorlás, odavándorlás
+
+. tempfile de
+
+. save `de'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000001.tmp saved as .dta format
+
+. 
+. use "../data/tstar/2018/kh.dta", clear
+
+. keep ev tazon  kh07 // autók száma
+
+. tempfile kh
+
+. save `kh'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000002.tmp saved as .dta format
+
+. 
+. use "../data/tstar/2018/mn.dta", clear
+
+. keep ev tazon mn04 /// ht munkanélk
+>                 mn11 mn12 // szakmókus munkanélk
+
+. tempfile mn
+
+. save `mn'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000003.tmp saved as .dta format
+
+. 
+. use "../data/tstar/2018/ig.dta", clear
+
+. keep ev tazon ig01 ig11 ig23 // összes lopás  bűnelkövetők száma
+
+. 
+. 
+. 
+. merge 1:1 ev tazon using `de', gen(merge_de)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        38,004
+        from master                         0  (merge_de==1)
+        from using                     38,004  (merge_de==2)
+
+    Matched                            53,839  (merge_de==3)
+    -----------------------------------------
+
+. merge 1:1 ev tazon using `kh', gen(merge_kh)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         3,167
+        from master                     3,167  (merge_kh==1)
+        from using                          0  (merge_kh==2)
+
+    Matched                            88,676  (merge_kh==3)
+    -----------------------------------------
+
+. merge 1:1 ev tazon using `mn', gen(merge_mn)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         9,501
+        from master                     9,501  (merge_mn==1)
+        from using                          0  (merge_mn==2)
+
+    Matched                            82,342  (merge_mn==3)
+    -----------------------------------------
+
+. 
+. rename ev  year
+
+. tempfile tstar_ext
+
+. save `tstar_ext'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000004.tmp saved as .dta format
+
+. 
+. use "../data/tstar/tstar_2018.dta", clear
+
+. merge 1:1 year tazon using `tstar_ext', gen(merge_tstar_ext)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                            91,843  (merge_tstar_ext==3)
+    -----------------------------------------
+
+. drop if telnev_helyes=="Budapest" //single obs.
+(29 observations deleted)
+
+. 
+end of do-file
+
+. count
+  91,814
+
+. codebook pop
+
+-------------------------------------------------------------------------------------------------
+pop                                                                              total population
+-------------------------------------------------------------------------------------------------
+
+                  Type: Numeric (double)
+
+                 Range: [8,214927]                    Units: 1
+         Unique values: 11,264                    Missing .: 915/91,814
+
+                  Mean: 2700.31
+             Std. dev.: 9381.86
+
+           Percentiles:     10%       25%       50%       75%       90%
+                            198       387       880      2011      4461
+

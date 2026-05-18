@@ -139,6 +139,56 @@ foreach s in "Ipolytarnóc" "Kisvárda" "Tura" "Erdőkertes" {
 
 }
 
+
+/*
+
+	Additional control variables for appendix 
+
+
+*/
+
+preserve
+	use "${unemp}/rmnk_112_08.dta", clear
+
+	keep telnev telkod regsumy08*
+	rename regsumy08* mn*
+	reshape long mn,i(telkod) j(honap) string
+	destring honap, force replace 
+
+	keep if honap<6
+	collapse (mean) mn, by(telkod telnev )
+	rename telkod tazon 
+	tempfile unempl 
+	save `unempl'
+
+	use "${tstar}/tstar.dta", clear
+
+	keep if year>2001&year<2008
+
+	replace de09 = . if year<2007
+
+
+	collapse (mean) kisgyerek oda el de09, by(telnev_helyes tazon)
+
+	merge 1:1 tazon using `unempl', gen(merge_unemp)
+
+	keep if merge_unemp==3
+
+	gen unemp2008 = mn/de09*100
+
+	la var unemp2008 "Unemployment 2008m1-m5 avg."
+	la var oda "Yearly inflow (pp), 2002-2007 avg."
+	la var el "Yearly outflow (pp), 2002-2007 avg."
+	la var kisgyerek "0-2 yr old / 1000, 2002-2007 avg."
+
+	keep tazon telnev_helyes kisgyerek oda el unemp2008
+	tempfile demo_ctrl
+	save `demo_ctrl'
+restore
+
+merge m:1 tazon using `demo_ctrl', gen(merge_demo_extra_ctrl)
+
+
 save ${temp}/analysis_data_set.dta, replace
 
 

@@ -23,7 +23,7 @@ gen treated = 0
 replace treated = 1 if treatment==2
 la var treated "Attacked"
 
-
+* control variable scaling
 replace unemp = unemp/pop1859 *100
 replace taxpayers = taxpayers/pop1859*100
 foreach v of varlist ig* kh07 de55 de62 {

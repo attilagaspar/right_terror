@@ -6,7 +6,7 @@
 */
 
 
-import delimited "${distances}/plain-text.csv", clear
+import delimited "${distances}/distances.csv", clear
 
 gen realized = 0
 

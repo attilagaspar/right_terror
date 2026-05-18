@@ -14,15 +14,11 @@ rename telkod tazon
 tempfile unempl 
 save `unempl'
 
-use "${tstar}/2018/de.dta", clear
+use "${tstar}/tstar.dta", clear
 
-gen kisgyerek = de04/de03*1000 
-gen oda = de62/de03*100
-gen el =  de63/de03*100
+keep if year>2001&year<2008
 
-keep if ev>2001&ev<2008
-
-replace de09 = . if ev<2007
+replace de09 = . if year<2007
 
 
 collapse (mean) kisgyerek oda el de09, by(telnev_helyes tazon)

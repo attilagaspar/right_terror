@@ -11,3 +11,6 @@
 # Data directories
 data/
 replication_data/
+
+# Run logs
+replication_log.txt

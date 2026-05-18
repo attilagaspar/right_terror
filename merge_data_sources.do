@@ -31,43 +31,12 @@ gen year=2002 // we merge it to 2002 because 2001 is not in the data set
 tempfile roma
 save `roma'
 
-* új kontrollváltozók kellenek tstarból
-		* romák
-		* bűnözés
-		 * nem kell mindegyiknek minden időszakban elérhetőnek lennie!
+/*
 
-use "${tstar}/2018/de.dta", clear
-keep ev tazon de55 de56 de62 de63 //élveszületés halálozások, elvándorlás, odavándorlás
-tempfile de
-save `de'
+	Load settlement level covariates from Central Statisical Office (TEIR/TSTAR)
 
-use "${tstar}/2018/kh.dta", clear
-keep ev tazon  kh07 // autók száma
-tempfile kh
-save `kh'
-
-use "${tstar}/2018/mn.dta", clear
-keep ev tazon mn04 /// ht munkanélk
-		mn11 mn12 // szakmókus munkanélk
-tempfile mn
-save `mn'
-
-use "${tstar}/2018/ig.dta", clear
-keep ev tazon ig01 ig11 ig23 // összes lopás  bűnelkövetők száma
-
-
-
-merge 1:1 ev tazon using `de', gen(merge_de)
-merge 1:1 ev tazon using `kh', gen(merge_kh)
-merge 1:1 ev tazon using `mn', gen(merge_mn)
-
-rename ev  year
-tempfile tstar_ext
-save `tstar_ext'
-
-use "${tstar}/tstar_2018.dta", clear
-merge 1:1 year tazon using `tstar_ext', gen(merge_tstar_ext)
-drop if telnev_helyes=="Budapest" //single obs.
+*/
+use "${tstar}/tstar.dta", clear
 tempfile tstar
 save `tstar'
 

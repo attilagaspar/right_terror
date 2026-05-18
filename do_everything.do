@@ -39,6 +39,9 @@ cap mkdir ${temp}
 cap mkdir ${temp}/synth 
 
 * election raw data dir
+* 	The raw election data is not part of the replication package but we
+*	provide the source where it can be downloaded and how our derived data set 
+*   can be generated from there. Once downloaded, they should be placed here.
 global election = "../data/election"
 
 * settlement distances raw data dir
@@ -93,8 +96,10 @@ copy "${map}/ksh4_bpker_maptile.ado"           "`geopath'ksh4_bpker_maptile.ado"
 
 */
 
-* append election panel
-do append_elections_from_raw_data_files.do
+* Append election panel from raw data files - the generation script is part of the package
+* 		but the original raw CSV/Excel files are not. 
+* This script produces ../replication_data/election_panel.dta
+* do append_elections_from_raw_data_files.do
 
 * generate treatment variable
 do create_treatment_var.do

@@ -1,3 +1,22 @@
+/*
+
+	
+	this script uses the ParlGov2024 survey. 
+	Döring, Holger and Philip Manow. 2024. Parliaments and governments database (ParlGov): Information on parties, elections and cabinets in established democracies.
+
+	Raw data files can be accessed from here:
+	https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/2VZ5ZC#
+
+	
+*/
+
+
+/*
+this script shows how our variables are generated from the raw data. Raw data
+is not included in this package.
+*/
+
+/*
 import delimited ${parlgov}/view_party.csv, clear
 keep if inlist(country_name, "Hungary","Slovakia","Greece","Austria","Romania","Bulgaria","France","Italy", "Poland")
 
@@ -15,16 +34,22 @@ format ed %td
 drop if ed<12504
 gen year = year(ed)
 
-
+* keep far right parties 
 keep if left_right>=7
 
-
-
+* drop parties below 1 percentage point support
 drop if vote_share<1
 
 collapse (sum) vote_share (first) country_id , by(country_name year election_type election_date )
 
 collapse (mean) vote_share (first) country_id , by(country_name year)
+
+save ${temp}/farright_parties.dta, replace
+
+*/
+
+* load derived variables
+use ${temp}/farright_parties.dta, clear
 
 local oldmember_color = "black%15"
 local newmember_color = "black%30"

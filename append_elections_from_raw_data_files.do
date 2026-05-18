@@ -874,4 +874,13 @@ format election_date %tm
 
 rename ty year
 
+foreach s in "2002" "2006" "2010" "2014" "2018" {
+	*old syntax
+	cap rm "${temp}/`s'_szkf.dta"
+	cap rm "${temp}/`s'_szkt.dta"
+	*new syntax
+	cap rm "${temp}/`s'_lista.dta"
+	cap rm "${temp}/election_`s'.dta"
+}
+
 save ${temp}/election_panel.dta, replace

@@ -1,4 +1,28 @@
+/*
+
+Survey raw data source
+
+HUN: Társadalomkutatási Informatikai Egyesülés – TDATA-H27: Magyar Választáskutatási Panel; 2008-2009 összevont teljes adatbázis. adatlap. Verzió: 2010-08-24
+ENG: Hungarian Election Research Panel; 2008-2009 consolidated full database
+
+Pricipal investigator:
+Tardos, Róbert
+Other investigators: Bozsonyi Károly;Enyedi, Zsolt; Fábián, Zoltán; Róna, Dániel
+https://adatbanktest.tarki.hu/cgi-bin/katalogus/tarkifo_hun.pl?sorszam=TDATA-H27
+
+** ORIGINAL SURVEY NOT PART OF THIS REPOSITORY ** 
+** Available upon request or at the above address **
+** If accessed, the following -- commented out -- script generates our variabes
+*/
+
+/*
 use "${survey}/HEPS2_2009.dta", clear
+
+keep e_6_1_9 e_6_2_9 e_6_3_9 e_6_4_9 e_6_5_9 e_6_6_9 e_6_7_9 e_6_8_9 e_6_9_9 e_6_10_9  e_5_1_9 e_5_2_9 e_5_3_9 e_5_4_9 e_5_5_9 baljobb 
+
+save "${temp}/survey.dta", replace
+*/
+use "${temp}/survey.dta", clear
 
 foreach v of varlist e_6_1_9 e_6_2_9 e_6_3_9 e_6_4_9 e_6_5_9 e_6_6_9 e_6_7_9 e_6_8_9 e_6_9_9 e_6_10_9  {
 	

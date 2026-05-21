@@ -11,6 +11,15 @@ The replication code was tested on:
 - **Operating System**: Windows 11 Pro (Build number 26200.7462)
 - **Hardware**: 12th Gen Intel(R) Core(TM) i5-12450H (2.00 GHz), 32 GB RAM
 
+
+## Data availability
+
+- The analysis sample (.dta files that are used to generate the results) is uploaded to the PSRM Dataverse and is public. 
+- Raw data (which includes proprietary sources) is available for request for replication purposes.
+- Nevertheless, the analysis sample generating scripts are publicly available to enhance transparency.
+
+
+
 ## Required Stata Packages
 
 Before running the replication, install the following packages:
@@ -27,18 +36,22 @@ ssc install sensemakr
 - `do_everything.do` - Master script that runs the entire replication
 - `replication_log.txt` - Log file generated during replication
 
-### Data Processing Scripts
+### Data Generation Scripts
 - `append_elections_from_raw_data_files.do` - Processes election panel data
-- `create_treatment_var.do` - Generates treatment variables
+- `create_treatment_var.do` - Generates treatment variables (attacked and planned settlements, and distances thereof)
 - `kuruc_generator.do` - Generates far-right portal mentions (**WARNING: VERY SLOW**)
 - `merge_data_sources.do` - Creates the main analysis dataset
+
+### Analysis Scripts
+
+#### Synthetic Control Scripts
+
 - `synth_control_generation.do` - Generates synthetic control units
 - `synth_append.do` - Combines synthetic units for regression analysis
 - `synthetic_units_table.do` - Creates donor pool descriptive statistics
 
-### Analysis Scripts
-
 #### Main Tables
+
 - `balance.do` - Generates balance tables (Table OA3)
 - `exhibits.do` - Main regression results (Table 1, Tables OA4-OA5)
 - `exhibits_alternative_outcomes.do` - Alternative outcome specifications (Tables OA8-OA10)
@@ -79,7 +92,7 @@ Results are saved to:
 
 1. **Set working directory**: Edit line 21 in `do_everything.do` to point to your code folder location
 2. **Install required packages** (see above)
-3. **Ensure data availability**: Make sure all required data directories are available
+3. **Ensure data availability**: Download data from PSRM dataverse
 4. **Run master script**:
    ```stata
    do do_everything.do

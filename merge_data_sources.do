@@ -181,7 +181,7 @@ preserve
 	la var el "Yearly outflow (pp), 2002-2007 avg."
 	la var kisgyerek "0-2 yr old / 1000, 2002-2007 avg."
 
-	keep tazon telnev_helyes kisgyerek oda el unemp2008
+	keep tazon telnev_helyes kisgyerek oda el unemp2008 mn
 	tempfile demo_ctrl
 	save `demo_ctrl'
 restore

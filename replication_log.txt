@@ -17706,3 +17706,2387 @@ end of do-file
 . 
 end of do-file
 
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. * this script generates the version of Table 1 with additional controls in the 
+. * Appendix
+. 
+. 
+. 
+. 
+. use ${temp}/analysis_data_set.dta, clear
+
+. 
+. 
+. /*
+> 
+>         Exhibit A: Difference-in-differences for 2006-2010
+> 
+> */
+. 
+. keep if year==2002|year==2006|year==2010
+(47,431 observations deleted)
+
+. drop if tazon==. // these settlements did not exist in given year
+(39 observations deleted)
+
+. tsset tazon year
+
+Panel variable: tazon (unbalanced)
+ Time variable: year, 2002 to 2010, but with gaps
+         Delta: 1 unit
+
+. gen d_extreme_right_share_valid = (extreme_right_share_valid - l4.extreme_right_share_valid)*10
+> 0
+(3,151 missing values generated)
+
+. gen l4_d_extreme_right_share_valid = l4.d_extreme_right_share_valid
+(6,295 missing values generated)
+
+. drop if year==2002
+(3,134 observations deleted)
+
+. 
+. gen post = 0 
+
+. replace post = 1 if year==2010
+(3,151 real changes made)
+
+. 
+. egen i = group(telnev_helyes)
+
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. gen treated = 0 
+
+. replace treated = 1 if treatment==2
+(18 real changes made)
+
+. la var treated "Attacked"
+
+. 
+. * control variable scaling
+. 
+. replace unemp = unemp/pop1859 *100
+variable unemp was long now double
+(6,267 real changes made)
+
+. replace taxpayers = taxpayers/pop1859*100
+(6,285 real changes made)
+
+. foreach v of varlist ig* kh07 de55 de62 {
+  2.         
+.         replace `v'=`v'/pop*100
+  3.         
+. 
+. }
+variable ig01 was long now double
+(6,162 real changes made)
+variable ig11 was long now double
+(5,703 real changes made)
+variable ig23 was int now float
+(5,876 real changes made)
+variable kh07 was long now double
+(6,292 real changes made)
+variable de55 was long now double
+(5,851 real changes made)
+variable de62 was long now double
+(6,264 real changes made)
+
+. 
+. 
+. 
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. local demo_extra = "kisgyerek oda el unemp2008"
+
+. 
+. 
+. 
+. eststo clear 
+
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23   , cluster(kist175)  
+
+Linear regression                               Number of obs     =      3,062
+                                                F(10, 173)        =       2.46
+                                                Prob > F          =     0.0089
+                                                R-squared         =     0.0210
+                                                Root MSE          =     7.4659
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.524947   2.663492     3.58   0.000     4.267823    14.78207
+     kisgyerek |  -.0167656   .0224995    -0.75   0.457    -.0611745    .0276433
+           oda |  -.0102538   .0875042    -0.12   0.907    -.1829671    .1624595
+            el |   .0482299   .0920833     0.52   0.601    -.1335215    .2299812
+     unemp2008 |   .1015319   .0509328     1.99   0.048     .0010023    .2020616
+  mentions0708 |   .0016849    .005359     0.31   0.754    -.0088925    .0122623
+roma_share2001 |  -.7625135   3.996696    -0.19   0.849    -8.651078    7.126051
+               |
+         unemp |
+           D1. |    .114382   .0518012     2.21   0.029     .0121382    .2166258
+               |
+          ig01 |
+           D1. |   .0608539   .0566578     1.07   0.284    -.0509756    .1726833
+               |
+          ig23 |
+           D1. |  -.1379468   .1395965    -0.99   0.324    -.4134783    .1375847
+               |
+         _cons |   14.63444   .9209922    15.89   0.000     12.81661    16.45227
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Whole country"
+
+added macro:
+               e(smpl) : "Whole country"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est1 stored)
+
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if donor_pool==1, cluster(kist175)  
+
+Linear regression                               Number of obs     =      1,953
+                                                F(10, 173)        =       2.32
+                                                Prob > F          =     0.0138
+                                                R-squared         =     0.0118
+                                                Root MSE          =      7.586
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.009351    2.63015     3.43   0.001     3.818037    14.20066
+     kisgyerek |  -.0281574   .0292704    -0.96   0.337    -.0859305    .0296157
+           oda |  -.0158756   .1117117    -0.14   0.887    -.2363689    .2046177
+            el |  -.0289464   .1125223    -0.26   0.797    -.2510398     .193147
+     unemp2008 |   .0092444   .0500075     0.18   0.854    -.0894591    .1079478
+  mentions0708 |   .0121365   .0091827     1.32   0.188    -.0059879     .030261
+roma_share2001 |   1.110448   3.659013     0.30   0.762    -6.111606    8.332502
+               |
+         unemp |
+           D1. |   .0576303   .0539169     1.07   0.287    -.0487894      .16405
+               |
+          ig01 |
+           D1. |   .0685233   .0613418     1.12   0.266    -.0525514     .189598
+               |
+          ig23 |
+           D1. |  -.2697909   .1710913    -1.58   0.117    -.6074859    .0679042
+               |
+         _cons |   17.45429    .950633    18.36   0.000     15.57796    19.33063
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Donor pool"
+
+added macro:
+               e(smpl) : "Donor pool"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est2 stored)
+
+. 
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if treatment!=0, rob
+
+Linear regression                               Number of obs     =         13
+                                                F(10, 2)          =      50.96
+                                                Prob > F          =     0.0194
+                                                R-squared         =     0.9070
+                                                Root MSE          =     6.5626
+
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   20.00698   8.450595     2.37   0.142      -16.353    56.36695
+     kisgyerek |   -.300223   .3303521    -0.91   0.459    -1.721613    1.121167
+           oda |   1.514609   3.705679     0.41   0.722    -14.42964    17.45886
+            el |  -4.698196   4.392603    -1.07   0.397    -23.59804    14.20165
+     unemp2008 |   -.039036   .1624941    -0.24   0.833    -.7381916    .6601196
+  mentions0708 |   1.311461   1.023724     1.28   0.329    -3.093268    5.716191
+roma_share2001 |  -84.80268   62.69097    -1.35   0.309    -354.5402    184.9348
+               |
+         unemp |
+           D1. |  -2.861193   1.699171    -1.68   0.234    -10.17213    4.449749
+               |
+          ig01 |
+           D1. |   5.495632   4.773053     1.15   0.369    -15.04116    26.03242
+               |
+          ig23 |
+           D1. |  -8.336145   5.298123    -1.57   0.256    -31.13213    14.45984
+               |
+         _cons |   48.70118   13.42647     3.63   0.068    -9.068265    106.4706
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Planned attack"
+
+added macro:
+               e(smpl) : "Planned attack"
+
+. estadd local serr "Robust"
+
+added macro:
+               e(serr) : "Robust"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est3 stored)
+
+. 
+. 
+. esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _cons )  se(3) b(3)
+>  ///
+>  mgroups("$\Delta$(Extreme right vote share 2010-2006, pp.) in 9 attacked settlements", pattern
+> (1 0 0 ) ///
+>  prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+>   collabels(none)  ///
+>    replace label nonotes   scalars(     "r2 $ R^2 $" N  "smpl Control group" ///
+>                         "serr Standard errors" ///
+>                         "controls Covariates" ///
+>                         )    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+(output written to ../replication_evidence/did1_extra_demo.tex)
+
+. copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa12.tex", replace
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. * this script generates the version of Table 1 with additional controls in the 
+. * Appendix
+. 
+. 
+. 
+. 
+. use ${temp}/analysis_data_set.dta, clear
+
+. 
+. 
+. /*
+> 
+>         Exhibit A: Difference-in-differences for 2006-2010
+> 
+> */
+. 
+. keep if year==2002|year==2006|year==2010
+(47,431 observations deleted)
+
+. drop if tazon==. // these settlements did not exist in given year
+(39 observations deleted)
+
+. tsset tazon year
+
+Panel variable: tazon (unbalanced)
+ Time variable: year, 2002 to 2010, but with gaps
+         Delta: 1 unit
+
+. gen d_extreme_right_share_valid = (extreme_right_share_valid - l4.extreme_right_share_valid)*10
+> 0
+(3,151 missing values generated)
+
+. gen l4_d_extreme_right_share_valid = l4.d_extreme_right_share_valid
+(6,295 missing values generated)
+
+. drop if year==2002
+(3,134 observations deleted)
+
+. 
+. gen post = 0 
+
+. replace post = 1 if year==2010
+(3,151 real changes made)
+
+. 
+. egen i = group(telnev_helyes)
+
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. gen treated = 0 
+
+. replace treated = 1 if treatment==2
+(18 real changes made)
+
+. la var treated "Attacked"
+
+. 
+. * control variable scaling
+. 
+. replace unemp = unemp/pop1859 *100
+variable unemp was long now double
+(6,267 real changes made)
+
+. replace taxpayers = taxpayers/pop1859*100
+(6,285 real changes made)
+
+. foreach v of varlist ig* kh07 de55 de62 {
+  2.         
+.         replace `v'=`v'/pop*100
+  3.         
+. 
+. }
+variable ig01 was long now double
+(6,162 real changes made)
+variable ig11 was long now double
+(5,703 real changes made)
+variable ig23 was int now float
+(5,876 real changes made)
+variable kh07 was long now double
+(6,292 real changes made)
+variable de55 was long now double
+(5,851 real changes made)
+variable de62 was long now double
+(6,264 real changes made)
+
+. 
+. 
+. 
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. local demo_extra = "kisgyerek el unemp2008"
+
+. 
+. 
+. 
+. eststo clear 
+
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23   , cluster(kist175)  
+
+Linear regression                               Number of obs     =      3,072
+                                                F(9, 173)         =       2.69
+                                                Prob > F          =     0.0059
+                                                R-squared         =     0.0212
+                                                Root MSE          =     7.4699
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.509689   2.659521     3.58   0.000     4.260403    14.75898
+     kisgyerek |  -.0141546   .0217446    -0.65   0.516    -.0570734    .0287643
+            el |   .0423137   .1105383     0.38   0.702    -.1758636     .260491
+     unemp2008 |   .1048102   .0509475     2.06   0.041     .0042515    .2053689
+  mentions0708 |    .001585   .0053503     0.30   0.767    -.0089752    .0121452
+roma_share2001 |   -1.14922   4.041011    -0.28   0.776    -9.125252    6.826812
+               |
+         unemp |
+           D1. |    .109397   .0530315     2.06   0.041      .004725     .214069
+               |
+          ig01 |
+           D1. |   .0643982   .0565508     1.14   0.256    -.0472201    .1760164
+               |
+          ig23 |
+           D1. |  -.1450261   .1388139    -1.04   0.298     -.419013    .1289608
+               |
+         _cons |   14.54888   .9079947    16.02   0.000     12.75671    16.34106
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Whole country"
+
+added macro:
+               e(smpl) : "Whole country"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est1 stored)
+
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if donor_pool==1, cluster(kist175)  
+
+Linear regression                               Number of obs     =      1,955
+                                                F(9, 173)         =       2.42
+                                                Prob > F          =     0.0129
+                                                R-squared         =     0.0115
+                                                Root MSE          =     7.5912
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.024297   2.610689     3.46   0.001     3.871393     14.1772
+     kisgyerek |  -.0282942   .0286165    -0.99   0.324    -.0847766    .0281882
+            el |  -.0444727   .0969484    -0.46   0.647    -.2358266    .1468812
+     unemp2008 |   .0135764   .0503578     0.27   0.788    -.0858183    .1129711
+  mentions0708 |    .012044    .009157     1.32   0.190    -.0060299    .0301178
+roma_share2001 |   .9341225   3.753463     0.25   0.804    -6.474355      8.3426
+               |
+         unemp |
+           D1. |   .0516741   .0564568     0.92   0.361    -.0597587    .1631069
+               |
+          ig01 |
+           D1. |   .0704742   .0613289     1.15   0.252     -.050575    .1915234
+               |
+          ig23 |
+           D1. |  -.2755179   .1719371    -1.60   0.111    -.6148825    .0638467
+               |
+         _cons |   17.44921    .945042    18.46   0.000     15.58391    19.31451
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Donor pool"
+
+added macro:
+               e(smpl) : "Donor pool"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est2 stored)
+
+. 
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if treatment!=0, rob
+
+Linear regression                               Number of obs     =         13
+                                                F(9, 3)           =      15.62
+                                                Prob > F          =     0.0224
+                                                R-squared         =     0.9022
+                                                Root MSE          =     5.4938
+
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   17.77235    4.27414     4.16   0.025     4.170132    31.37457
+     kisgyerek |  -.3205519   .2642685    -1.21   0.312    -1.161572    .5204685
+            el |  -3.179777   1.558569    -2.04   0.134    -8.139837    1.780284
+     unemp2008 |  -.0041058   .1433831    -0.03   0.979    -.4604148    .4522031
+  mentions0708 |   1.069058   .5489815     1.95   0.147    -.6780459    2.816162
+roma_share2001 |  -71.58357   37.34429    -1.92   0.151    -190.4298    47.26263
+               |
+         unemp |
+           D1. |  -2.372991   .9044431    -2.62   0.079    -5.251333    .5053505
+               |
+          ig01 |
+           D1. |   4.531954   2.816224     1.61   0.206    -4.430527    13.49444
+               |
+          ig23 |
+           D1. |   -6.97154    2.72893    -2.55   0.084    -15.65621    1.713133
+               |
+         _cons |    47.4183   11.29523     4.20   0.025     11.47184    83.36476
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Planned attack"
+
+added macro:
+               e(smpl) : "Planned attack"
+
+. estadd local serr "Robust"
+
+added macro:
+               e(serr) : "Robust"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est3 stored)
+
+. 
+. 
+. esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _cons )  se(3) b(3)
+>  ///
+>  mgroups("$\Delta$(Extreme right vote share 2010-2006, pp.) in 9 attacked settlements", pattern
+> (1 0 0 ) ///
+>  prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+>   collabels(none)  ///
+>    replace label nonotes   scalars(     "r2 $ R^2 $" N  "smpl Control group" ///
+>                         "serr Standard errors" ///
+>                         "controls Covariates" ///
+>                         )    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+(output written to ../replication_evidence/did1_extra_demo.tex)
+
+. copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa12.tex", replace
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. * this script generates the version of Table 1 with additional controls in the 
+. * Appendix
+. 
+. 
+. 
+. 
+. use ${temp}/analysis_data_set.dta, clear
+
+. 
+. 
+. /*
+> 
+>         Exhibit A: Difference-in-differences for 2006-2010
+> 
+> */
+. 
+. keep if year==2002|year==2006|year==2010
+(47,431 observations deleted)
+
+. drop if tazon==. // these settlements did not exist in given year
+(39 observations deleted)
+
+. tsset tazon year
+
+Panel variable: tazon (unbalanced)
+ Time variable: year, 2002 to 2010, but with gaps
+         Delta: 1 unit
+
+. gen d_extreme_right_share_valid = (extreme_right_share_valid - l4.extreme_right_share_valid)*10
+> 0
+(3,151 missing values generated)
+
+. gen l4_d_extreme_right_share_valid = l4.d_extreme_right_share_valid
+(6,295 missing values generated)
+
+. drop if year==2002
+(3,134 observations deleted)
+
+. 
+. gen post = 0 
+
+. replace post = 1 if year==2010
+(3,151 real changes made)
+
+. 
+. egen i = group(telnev_helyes)
+
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. gen treated = 0 
+
+. replace treated = 1 if treatment==2
+(18 real changes made)
+
+. la var treated "Attacked"
+
+. 
+. * control variable scaling
+. 
+. replace unemp = unemp/pop1859 *100
+variable unemp was long now double
+(6,267 real changes made)
+
+. replace taxpayers = taxpayers/pop1859*100
+(6,285 real changes made)
+
+. foreach v of varlist ig* kh07 de55 de62 {
+  2.         
+.         replace `v'=`v'/pop*100
+  3.         
+. 
+. }
+variable ig01 was long now double
+(6,162 real changes made)
+variable ig11 was long now double
+(5,703 real changes made)
+variable ig23 was int now float
+(5,876 real changes made)
+variable kh07 was long now double
+(6,292 real changes made)
+variable de55 was long now double
+(5,851 real changes made)
+variable de62 was long now double
+(6,264 real changes made)
+
+. 
+. 
+. 
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. local demo_extra = "kisgyerek el unemp2008"
+
+. 
+. 
+. 
+. eststo clear 
+
+. reg d_extreme_right_share_valid treated `demo_extra'    , cluster(kist175)  
+
+Linear regression                               Number of obs     =      6,220
+                                                F(4, 173)         =      10.45
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0249
+                                                Root MSE          =     10.167
+
+                              (Std. err. adjusted for 174 clusters in kist175)
+------------------------------------------------------------------------------
+             |               Robust
+d_extreme_~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     treated |   5.033219   1.155206     4.36   0.000     2.753106    7.313333
+   kisgyerek |  -.0428799   .0124405    -3.45   0.001    -.0674346   -.0183251
+          el |  -.4937779    .154074    -3.20   0.002    -.7978847   -.1896711
+   unemp2008 |   .1042111   .0264825     3.94   0.000     .0519407    .1564814
+       _cons |   9.886139   .8473076    11.67   0.000     8.213747    11.55853
+------------------------------------------------------------------------------
+
+. estadd local smpl "Whole country"
+
+added macro:
+               e(smpl) : "Whole country"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est1 stored)
+
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' if donor_pool==1, cluster(kist175)  
+
+Linear regression                               Number of obs     =      3,931
+                                                F(4, 173)         =      13.32
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0289
+                                                Root MSE          =      10.57
+
+                              (Std. err. adjusted for 174 clusters in kist175)
+------------------------------------------------------------------------------
+             |               Robust
+d_extreme_~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     treated |   4.997967   1.107946     4.51   0.000     2.811135    7.184798
+   kisgyerek |  -.0772608   .0160405    -4.82   0.000     -.108921   -.0456007
+          el |  -.5423432   .2131794    -2.54   0.012    -.9631105   -.1215759
+   unemp2008 |   .0790064   .0264691     2.98   0.003     .0267624    .1312504
+       _cons |   11.91496    1.03129    11.55   0.000     9.879432    13.95049
+------------------------------------------------------------------------------
+
+. estadd local smpl "Donor pool"
+
+added macro:
+               e(smpl) : "Donor pool"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est2 stored)
+
+. 
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' if treatment!=0, rob
+
+Linear regression                               Number of obs     =         26
+                                                F(4, 21)          =       0.45
+                                                Prob > F          =     0.7726
+                                                R-squared         =     0.0592
+                                                Root MSE          =      14.99
+
+------------------------------------------------------------------------------
+             |               Robust
+d_extreme_~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     treated |   5.520749   5.683391     0.97   0.342     -6.29851    17.34001
+   kisgyerek |  -.1216133   .4343229    -0.28   0.782    -1.024837    .7816107
+          el |  -.7365157   1.457737    -0.51   0.619    -3.768045    2.295013
+   unemp2008 |   .0642584   .3304683     0.19   0.848     -.622988    .7515049
+       _cons |   14.53075   10.85711     1.34   0.195    -8.047855    37.10936
+------------------------------------------------------------------------------
+
+. estadd local smpl "Planned attack"
+
+added macro:
+               e(smpl) : "Planned attack"
+
+. estadd local serr "Robust"
+
+added macro:
+               e(serr) : "Robust"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est3 stored)
+
+. 
+. 
+. esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _cons )  se(3) b(3)
+>  ///
+>  mgroups("$\Delta$(Extreme right vote share 2010-2006, pp.) in 9 attacked settlements", pattern
+> (1 0 0 ) ///
+>  prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+>   collabels(none)  ///
+>    replace label nonotes   scalars(     "r2 $ R^2 $" N  "smpl Control group" ///
+>                         "serr Standard errors" ///
+>                         "controls Covariates" ///
+>                         )    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+(output written to ../replication_evidence/did1_extra_demo.tex)
+
+. copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa12.tex", replace
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\agaspar\Dropbox\research\rightterror\replication_package\merge_data_sources.do"
+
+. /*
+> 
+>         This script merges 
+>                 - election data
+>                 - attack data
+>                 - settlement level controls
+>         to generate the main analysis data file.
+> 
+> */
+. 
+. * romák száma - census 2001
+. import excel "${census_roma_share}/roma2001raw.xlsx", sheet("Munka1") firstrow clear
+(7 vars, 2,250 obs)
+
+. split telnév, gen(x) parse("/")
+variables created as string: 
+x1  x2  x3
+
+. replace x1=strtrim(x1)
+(156 real changes made)
+
+. rename x1 telnev_helyes 
+
+. drop x*
+
+. drop if strpos(telnév,"A városokban együtt")!=0
+(19 observations deleted)
+
+. 
+. 
+. replace telnev_helyes="Baranyahídvég" if telnev_helyes=="Baranyahidvég"
+(1 real change made)
+
+. replace telnev_helyes="Búcsúszentlászló" if telnev_helyes=="Bucsuszentlászló"
+(1 real change made)
+
+. replace telnev_helyes="Kővágótöttös" if telnev_helyes=="Kővágótőttős"
+(1 real change made)
+
+. replace telnev_helyes="Rábahídvég" if telnev_helyes=="Rábahidvég"
+(1 real change made)
+
+. replace telnev_helyes="Sajóhídvég" if telnev_helyes=="Sajóhidvég"
+(1 real change made)
+
+. replace telnev_helyes="Szabadhídvég" if telnev_helyes=="Szabadhidvég"
+(1 real change made)
+
+. replace telnev_helyes="Óhíd" if telnev_helyes=="Óhid"
+(1 real change made)
+
+. 
+. 
+. keep roma_nationality2001 roma_culturally2001 roma_mothertongue2001 roma_language_user2001 teln
+> ev_helyes
+
+. gen year=2002 // we merge it to 2002 because 2001 is not in the data set
+
+. tempfile roma
+
+. save `roma'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000001.tmp saved as .dta format
+
+. 
+. /*
+> 
+>         Load settlement level covariates from Central Statisical Office (TEIR/TSTAR)
+> 
+> */
+. use "${tstar}/tstar.dta", clear
+
+. tempfile tstar
+
+. save `tstar'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000002.tmp saved as .dta format
+
+. 
+. 
+. use ${temp}/election_panel.dta, clear
+
+. 
+. *no data in tstar on Budapest districts
+. drop if strpos(telnev_bpker,"Budapest")!=0
+(207 observations deleted)
+
+. 
+. rename telnev_bpker telnev_helyes 
+
+. 
+. merge m:1 telnev_helyes year using `tstar', gen(merge_tstar)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        66,653
+        from master                         0  (merge_tstar==1)
+        from using                     66,653  (merge_tstar==2)
+
+    Matched                            28,314  (merge_tstar==3)
+    -----------------------------------------
+
+. 
+. merge m:1 telnev_helyes year using `roma', gen(merge_census2001_roma)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        92,736
+        from master                    92,736  (merge_census2001_roma==1)
+        from using                          0  (merge_census2001_roma==2)
+
+    Matched                             2,231  (merge_census2001_roma==3)
+    -----------------------------------------
+
+. 
+. * missings are zeroes 
+. foreach v of varlist roma_nationality2001 roma_culturally2001 roma_mothertongue2001 roma_langua
+> ge_user2001 {
+  2.         
+.         replace `v'=0 if year==2002&`v'==.
+  3.         
+. }
+(935 real changes made)
+(935 real changes made)
+(935 real changes made)
+(935 real changes made)
+
+. 
+. *keep election years only
+. drop if year!=1998&year!=2002&year!=2004&year!=2006&year!=2009&year!=2010&year!=2014&year!=2018
+(66,486 observations deleted)
+
+. drop if merge_tstar==2  // these year-settlement combinations did not exist in the given year
+(167 observations deleted)
+
+. 
+. 
+. 
+. merge m:1 telnev_helyes using ${temp}/treatment.dta, gen(merge_treatment)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             1
+        from master                         0  (merge_treatment==1)
+        from using                          1  (merge_treatment==2)
+
+    Matched                            28,314  (merge_treatment==3)
+    -----------------------------------------
+
+. 
+. drop if merge_treatment==2
+(1 observation deleted)
+
+. 
+. 
+. gen extreme_right_share = szav_jobbik / szav_eligible
+
+. gen extreme_right_share_valid = szav_jobbik / szav_valid
+
+. 
+. gen treatment=0
+
+. replace treatment=1 if planned==1
+(36 real changes made)
+
+. replace treatment=2 if realized==1
+(81 real changes made)
+
+. 
+. gen geo_treatment=0
+
+. replace geo_treatment=1 if min_distance_to_planned<=15
+(543 real changes made)
+
+. replace geo_treatment=2 if min_distance_to_realized<=15
+(889 real changes made)
+
+. 
+. 
+. 
+. tsset tazon election_date
+
+Panel variable: tazon (unbalanced)
+ Time variable: election_date, 1998m5 to 2018m4, but with gaps
+         Delta: 1 month
+
+. 
+. 
+. /*
+> 
+>         create donor pool
+> 
+> 
+> */
+. 
+. 
+. gen donor_pool = 0
+
+. 
+. * population
+. egen mean_pop = mean(pop), by(telnev_helyes)
+
+. replace donor_pool = 1 if mean_pop<=10000
+(27,036 real changes made)
+
+. 
+. * share of roma in 2001
+. 
+. 
+. *cumulative mentions in kuruc info
+. merge m:1 telnev_helyes year using  ${temp}/kuruc_yearly.dta, gen(merge_kuruc)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        37,993
+        from master                     9,408  (merge_kuruc==1)
+        from using                     28,585  (merge_kuruc==2)
+
+    Matched                            18,906  (merge_kuruc==3)
+    -----------------------------------------
+
+. *drop if merge_kuruc==2
+. 
+. *mentions in 2008 before killings
+. merge m:1 telnev_helyes using  ${temp}/kuruc_2008.dta, gen(merge_kuruc2008)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                            56,899  (merge_kuruc2008==3)
+    -----------------------------------------
+
+. *drop if merge_kuruc==2
+. gen cm2007 = cum_mentions if year==2007
+(53,732 missing values generated)
+
+. *egen cum_mentions2007 = min(cm2007), by(telnev_helyes)
+. *replace donor_pool = 0 if cum_mentions2007==0
+. 
+. 
+. * only use settlements with positive roma share in 2001
+. gen roma_share = roma_nationality2001/pop
+(53,765 missing values generated)
+
+. egen roma_share2001 = min(roma_share), by(telnev_helyes)
+(491 missing values generated)
+
+. replace donor_pool=0 if roma_share2001==0
+(18,468 real changes made)
+
+. 
+. /*
+> 
+>         create treatment cluster
+> 
+> */
+. 
+. gen treatment_cluster = ""
+(56,899 missing values generated)
+
+. 
+. foreach s in "Galgagyörk" "Piricse" "Nyíradony" "Tarnabod" "Nagycsécs" "Alsózsolca" ///
+>         "Tatárszentgyörgy" "Tiszalök" "Kisléta" {
+  2.                 replace treatment_cluster = "`s'" if min_distance_to_realized==distance_to_`
+> s'
+  3.         }
+variable treatment_cluster was str1 now str11
+(37,151 real changes made)
+(29,440 real changes made)
+(29,764 real changes made)
+(30,305 real changes made)
+(29,017 real changes made)
+(30,784 real changes made)
+variable treatment_cluster was str11 now str18
+(42,293 real changes made)
+(29,366 real changes made)
+(29,530 real changes made)
+
+.         
+. foreach s in "Ipolytarnóc" "Kisvárda" "Tura" "Erdőkertes" {
+  2. 
+.                 replace treatment_cluster = "`s'" if min_distance_to_planned==distance_to_`s'&m
+> in_distance_to_planned<min_distance_to_realized
+  3. 
+. }
+(614 real changes made)
+(1,242 real changes made)
+(815 real changes made)
+(12,083 real changes made)
+
+. 
+. 
+. /*
+> 
+>         Additional control variables for appendix 
+> 
+> 
+> */
+. 
+. preserve
+
+.         use "${unemp}/rmnk_112_08.dta", clear
+
+. 
+.         keep telnev telkod regsumy08*
+
+.         rename regsumy08* mn*
+
+.         reshape long mn,i(telkod) j(honap) string
+(j = 01 02 03 04 05 06 07 08 09 10 11 12)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations            3,175   ->   38,100      
+Number of variables                  14   ->   4           
+j variable (12 values)                    ->   honap
+xij variables:
+                     mn01 mn02 ... mn12   ->   mn
+-----------------------------------------------------------------------------
+
+.         destring honap, force replace 
+honap: all characters numeric; replaced as byte
+
+. 
+.         keep if honap<6
+(22,225 observations deleted)
+
+.         collapse (mean) mn, by(telkod telnev )
+
+.         rename telkod tazon 
+
+.         tempfile unempl 
+
+.         save `unempl'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000004.tmp saved as .dta format
+
+. 
+.         use "${tstar}/tstar.dta", clear
+
+. 
+.         keep if year>2001&year<2008
+(72,818 observations deleted)
+
+. 
+.         replace de09 = . if year<2007
+(15,710 real changes made, 15,710 to missing)
+
+. 
+. 
+.         collapse (mean) kisgyerek oda el de09, by(telnev_helyes tazon)
+
+. 
+.         merge 1:1 tazon using `unempl', gen(merge_unemp)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            39
+        from master                        15  (merge_unemp==1)
+        from using                         24  (merge_unemp==2)
+
+    Matched                             3,151  (merge_unemp==3)
+    -----------------------------------------
+
+. 
+.         keep if merge_unemp==3
+(39 observations deleted)
+
+. 
+.         gen unemp2008 = mn/de09*100
+
+. 
+.         la var unemp2008 "Unemployment 2008m1-m5 avg."
+
+.         la var oda "Yearly inflow (pp), 2002-2007 avg."
+
+.         la var el "Yearly outflow (pp), 2002-2007 avg."
+
+.         la var kisgyerek "0-2 yr old / 1000, 2002-2007 avg."
+
+. 
+.         keep tazon telnev_helyes kisgyerek oda el unemp2008
+
+.         tempfile demo_ctrl
+
+.         save `demo_ctrl'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000005.tmp saved as .dta format
+
+. restore
+
+. 
+. merge m:1 tazon using `demo_ctrl', gen(merge_demo_extra_ctrl)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        28,592
+        from master                    28,592  (merge_demo_extra_ctrl==1)
+        from using                          0  (merge_demo_extra_ctrl==2)
+
+    Matched                            28,307  (merge_demo_extra_ctrl==3)
+    -----------------------------------------
+
+. 
+. 
+. save ${temp}/analysis_data_set.dta, replace
+file ../replication_input_data/analysis_data_set.dta saved
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. * this script generates the version of Table 1 with additional controls in the 
+. * Appendix
+. 
+. 
+. 
+. 
+. use ${temp}/analysis_data_set.dta, clear
+
+. 
+. 
+. /*
+> 
+>         Exhibit A: Difference-in-differences for 2006-2010
+> 
+> */
+. 
+. keep if year==2002|year==2006|year==2010
+(47,431 observations deleted)
+
+. drop if tazon==. // these settlements did not exist in given year
+(39 observations deleted)
+
+. tsset tazon year
+
+Panel variable: tazon (unbalanced)
+ Time variable: year, 2002 to 2010, but with gaps
+         Delta: 1 unit
+
+. gen d_extreme_right_share_valid = (extreme_right_share_valid - l4.extreme_right_share_valid)*10
+> 0
+(3,151 missing values generated)
+
+. gen l4_d_extreme_right_share_valid = l4.d_extreme_right_share_valid
+(6,295 missing values generated)
+
+. drop if year==2002
+(3,134 observations deleted)
+
+. 
+. gen post = 0 
+
+. replace post = 1 if year==2010
+(3,151 real changes made)
+
+. 
+. egen i = group(telnev_helyes)
+
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. gen treated = 0 
+
+. replace treated = 1 if treatment==2
+(18 real changes made)
+
+. la var treated "Attacked"
+
+. 
+. * control variable scaling
+. 
+. replace unemp = unemp/pop1859 *100
+variable unemp was long now double
+(6,267 real changes made)
+
+. replace taxpayers = taxpayers/pop1859*100
+(6,285 real changes made)
+
+. foreach v of varlist ig* kh07 de55 de62 {
+  2.         
+.         replace `v'=`v'/pop*100
+  3.         
+. 
+. }
+variable ig01 was long now double
+(6,162 real changes made)
+variable ig11 was long now double
+(5,703 real changes made)
+variable ig23 was int now float
+(5,876 real changes made)
+variable kh07 was long now double
+(6,292 real changes made)
+variable de55 was long now double
+(5,851 real changes made)
+variable de62 was long now double
+(6,264 real changes made)
+
+. 
+. 
+. 
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. 
+. drop unemp2008 
+
+. 
+. gen unemp2008 = mn/de09*100
+mn ambiguous abbreviation
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+.         use "${unemp}/rmnk_112_08.dta", clear
+
+. 
+.         keep telnev telkod regsumy08*
+
+.         rename regsumy08* mn*
+
+.         reshape long mn,i(telkod) j(honap) string
+(j = 01 02 03 04 05 06 07 08 09 10 11 12)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations            3,175   ->   38,100      
+Number of variables                  14   ->   4           
+j variable (12 values)                    ->   honap
+xij variables:
+                     mn01 mn02 ... mn12   ->   mn
+-----------------------------------------------------------------------------
+
+.         destring honap, force replace 
+honap: all characters numeric; replaced as byte
+
+. 
+.         keep if honap<6
+(22,225 observations deleted)
+
+.         collapse (mean) mn, by(telkod telnev )
+
+.         rename telkod tazon 
+
+.         tempfile unempl 
+
+. 
+end of do-file
+
+. do "C:\Users\agaspar\Dropbox\research\rightterror\replication_package\merge_data_sources.do"
+
+. /*
+> 
+>         This script merges 
+>                 - election data
+>                 - attack data
+>                 - settlement level controls
+>         to generate the main analysis data file.
+> 
+> */
+. 
+. * romák száma - census 2001
+. import excel "${census_roma_share}/roma2001raw.xlsx", sheet("Munka1") firstrow clear
+(7 vars, 2,250 obs)
+
+. split telnév, gen(x) parse("/")
+variables created as string: 
+x1  x2  x3
+
+. replace x1=strtrim(x1)
+(156 real changes made)
+
+. rename x1 telnev_helyes 
+
+. drop x*
+
+. drop if strpos(telnév,"A városokban együtt")!=0
+(19 observations deleted)
+
+. 
+. 
+. replace telnev_helyes="Baranyahídvég" if telnev_helyes=="Baranyahidvég"
+(1 real change made)
+
+. replace telnev_helyes="Búcsúszentlászló" if telnev_helyes=="Bucsuszentlászló"
+(1 real change made)
+
+. replace telnev_helyes="Kővágótöttös" if telnev_helyes=="Kővágótőttős"
+(1 real change made)
+
+. replace telnev_helyes="Rábahídvég" if telnev_helyes=="Rábahidvég"
+(1 real change made)
+
+. replace telnev_helyes="Sajóhídvég" if telnev_helyes=="Sajóhidvég"
+(1 real change made)
+
+. replace telnev_helyes="Szabadhídvég" if telnev_helyes=="Szabadhidvég"
+(1 real change made)
+
+. replace telnev_helyes="Óhíd" if telnev_helyes=="Óhid"
+(1 real change made)
+
+. 
+. 
+. keep roma_nationality2001 roma_culturally2001 roma_mothertongue2001 roma_language_user2001 teln
+> ev_helyes
+
+. gen year=2002 // we merge it to 2002 because 2001 is not in the data set
+
+. tempfile roma
+
+. save `roma'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000001.tmp saved as .dta format
+
+. 
+. /*
+> 
+>         Load settlement level covariates from Central Statisical Office (TEIR/TSTAR)
+> 
+> */
+. use "${tstar}/tstar.dta", clear
+
+. tempfile tstar
+
+. save `tstar'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000002.tmp saved as .dta format
+
+. 
+. 
+. use ${temp}/election_panel.dta, clear
+
+. 
+. *no data in tstar on Budapest districts
+. drop if strpos(telnev_bpker,"Budapest")!=0
+(207 observations deleted)
+
+. 
+. rename telnev_bpker telnev_helyes 
+
+. 
+. merge m:1 telnev_helyes year using `tstar', gen(merge_tstar)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        66,653
+        from master                         0  (merge_tstar==1)
+        from using                     66,653  (merge_tstar==2)
+
+    Matched                            28,314  (merge_tstar==3)
+    -----------------------------------------
+
+. 
+. merge m:1 telnev_helyes year using `roma', gen(merge_census2001_roma)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        92,736
+        from master                    92,736  (merge_census2001_roma==1)
+        from using                          0  (merge_census2001_roma==2)
+
+    Matched                             2,231  (merge_census2001_roma==3)
+    -----------------------------------------
+
+. 
+. * missings are zeroes 
+. foreach v of varlist roma_nationality2001 roma_culturally2001 roma_mothertongue2001 roma_langua
+> ge_user2001 {
+  2.         
+.         replace `v'=0 if year==2002&`v'==.
+  3.         
+. }
+(935 real changes made)
+(935 real changes made)
+(935 real changes made)
+(935 real changes made)
+
+. 
+. *keep election years only
+. drop if year!=1998&year!=2002&year!=2004&year!=2006&year!=2009&year!=2010&year!=2014&year!=2018
+(66,486 observations deleted)
+
+. drop if merge_tstar==2  // these year-settlement combinations did not exist in the given year
+(167 observations deleted)
+
+. 
+. 
+. 
+. merge m:1 telnev_helyes using ${temp}/treatment.dta, gen(merge_treatment)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             1
+        from master                         0  (merge_treatment==1)
+        from using                          1  (merge_treatment==2)
+
+    Matched                            28,314  (merge_treatment==3)
+    -----------------------------------------
+
+. 
+. drop if merge_treatment==2
+(1 observation deleted)
+
+. 
+. 
+. gen extreme_right_share = szav_jobbik / szav_eligible
+
+. gen extreme_right_share_valid = szav_jobbik / szav_valid
+
+. 
+. gen treatment=0
+
+. replace treatment=1 if planned==1
+(36 real changes made)
+
+. replace treatment=2 if realized==1
+(81 real changes made)
+
+. 
+. gen geo_treatment=0
+
+. replace geo_treatment=1 if min_distance_to_planned<=15
+(543 real changes made)
+
+. replace geo_treatment=2 if min_distance_to_realized<=15
+(889 real changes made)
+
+. 
+. 
+. 
+. tsset tazon election_date
+
+Panel variable: tazon (unbalanced)
+ Time variable: election_date, 1998m5 to 2018m4, but with gaps
+         Delta: 1 month
+
+. 
+. 
+. /*
+> 
+>         create donor pool
+> 
+> 
+> */
+. 
+. 
+. gen donor_pool = 0
+
+. 
+. * population
+. egen mean_pop = mean(pop), by(telnev_helyes)
+
+. replace donor_pool = 1 if mean_pop<=10000
+(27,036 real changes made)
+
+. 
+. * share of roma in 2001
+. 
+. 
+. *cumulative mentions in kuruc info
+. merge m:1 telnev_helyes year using  ${temp}/kuruc_yearly.dta, gen(merge_kuruc)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        37,993
+        from master                     9,408  (merge_kuruc==1)
+        from using                     28,585  (merge_kuruc==2)
+
+    Matched                            18,906  (merge_kuruc==3)
+    -----------------------------------------
+
+. *drop if merge_kuruc==2
+. 
+. *mentions in 2008 before killings
+. merge m:1 telnev_helyes using  ${temp}/kuruc_2008.dta, gen(merge_kuruc2008)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                            56,899  (merge_kuruc2008==3)
+    -----------------------------------------
+
+. *drop if merge_kuruc==2
+. gen cm2007 = cum_mentions if year==2007
+(53,732 missing values generated)
+
+. *egen cum_mentions2007 = min(cm2007), by(telnev_helyes)
+. *replace donor_pool = 0 if cum_mentions2007==0
+. 
+. 
+. * only use settlements with positive roma share in 2001
+. gen roma_share = roma_nationality2001/pop
+(53,765 missing values generated)
+
+. egen roma_share2001 = min(roma_share), by(telnev_helyes)
+(491 missing values generated)
+
+. replace donor_pool=0 if roma_share2001==0
+(18,468 real changes made)
+
+. 
+. /*
+> 
+>         create treatment cluster
+> 
+> */
+. 
+. gen treatment_cluster = ""
+(56,899 missing values generated)
+
+. 
+. foreach s in "Galgagyörk" "Piricse" "Nyíradony" "Tarnabod" "Nagycsécs" "Alsózsolca" ///
+>         "Tatárszentgyörgy" "Tiszalök" "Kisléta" {
+  2.                 replace treatment_cluster = "`s'" if min_distance_to_realized==distance_to_`
+> s'
+  3.         }
+variable treatment_cluster was str1 now str11
+(37,151 real changes made)
+(29,440 real changes made)
+(29,764 real changes made)
+(30,305 real changes made)
+(29,017 real changes made)
+(30,784 real changes made)
+variable treatment_cluster was str11 now str18
+(42,293 real changes made)
+(29,366 real changes made)
+(29,530 real changes made)
+
+.         
+. foreach s in "Ipolytarnóc" "Kisvárda" "Tura" "Erdőkertes" {
+  2. 
+.                 replace treatment_cluster = "`s'" if min_distance_to_planned==distance_to_`s'&m
+> in_distance_to_planned<min_distance_to_realized
+  3. 
+. }
+(614 real changes made)
+(1,242 real changes made)
+(815 real changes made)
+(12,083 real changes made)
+
+. 
+. 
+. /*
+> 
+>         Additional control variables for appendix 
+> 
+> 
+> */
+. 
+. preserve
+
+.         use "${unemp}/rmnk_112_08.dta", clear
+
+. 
+.         keep telnev telkod regsumy08*
+
+.         rename regsumy08* mn*
+
+.         reshape long mn,i(telkod) j(honap) string
+(j = 01 02 03 04 05 06 07 08 09 10 11 12)
+
+Data                               Wide   ->   Long
+-----------------------------------------------------------------------------
+Number of observations            3,175   ->   38,100      
+Number of variables                  14   ->   4           
+j variable (12 values)                    ->   honap
+xij variables:
+                     mn01 mn02 ... mn12   ->   mn
+-----------------------------------------------------------------------------
+
+.         destring honap, force replace 
+honap: all characters numeric; replaced as byte
+
+. 
+.         keep if honap<6
+(22,225 observations deleted)
+
+.         collapse (mean) mn, by(telkod telnev )
+
+.         rename telkod tazon 
+
+.         tempfile unempl 
+
+.         save `unempl'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000004.tmp saved as .dta format
+
+. 
+.         use "${tstar}/tstar.dta", clear
+
+. 
+.         keep if year>2001&year<2008
+(72,818 observations deleted)
+
+. 
+.         replace de09 = . if year<2007
+(15,710 real changes made, 15,710 to missing)
+
+. 
+. 
+.         collapse (mean) kisgyerek oda el de09, by(telnev_helyes tazon)
+
+. 
+.         merge 1:1 tazon using `unempl', gen(merge_unemp)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            39
+        from master                        15  (merge_unemp==1)
+        from using                         24  (merge_unemp==2)
+
+    Matched                             3,151  (merge_unemp==3)
+    -----------------------------------------
+
+. 
+.         keep if merge_unemp==3
+(39 observations deleted)
+
+. 
+.         gen unemp2008 = mn/de09*100
+
+. 
+.         la var unemp2008 "Unemployment 2008m1-m5 avg."
+
+.         la var oda "Yearly inflow (pp), 2002-2007 avg."
+
+.         la var el "Yearly outflow (pp), 2002-2007 avg."
+
+.         la var kisgyerek "0-2 yr old / 1000, 2002-2007 avg."
+
+. 
+.         keep tazon telnev_helyes kisgyerek oda el unemp2008 mn
+
+.         tempfile demo_ctrl
+
+.         save `demo_ctrl'
+file C:\Users\agaspar\AppData\Local\Temp\ST_361c_000005.tmp saved as .dta format
+
+. restore
+
+. 
+. merge m:1 tazon using `demo_ctrl', gen(merge_demo_extra_ctrl)
+(label telnev already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        28,592
+        from master                    28,592  (merge_demo_extra_ctrl==1)
+        from using                          0  (merge_demo_extra_ctrl==2)
+
+    Matched                            28,307  (merge_demo_extra_ctrl==3)
+    -----------------------------------------
+
+. 
+. 
+. save ${temp}/analysis_data_set.dta, replace
+file ../replication_input_data/analysis_data_set.dta saved
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. * this script generates the version of Table 1 with additional controls in the 
+. * Appendix
+. 
+. 
+. 
+. 
+. use ${temp}/analysis_data_set.dta, clear
+
+. 
+. 
+. /*
+> 
+>         Exhibit A: Difference-in-differences for 2006-2010
+> 
+> */
+. 
+. keep if year==2002|year==2006|year==2010
+(47,431 observations deleted)
+
+. drop if tazon==. // these settlements did not exist in given year
+(39 observations deleted)
+
+. tsset tazon year
+
+Panel variable: tazon (unbalanced)
+ Time variable: year, 2002 to 2010, but with gaps
+         Delta: 1 unit
+
+. gen d_extreme_right_share_valid = (extreme_right_share_valid - l4.extreme_right_share_valid)*10
+> 0
+(3,151 missing values generated)
+
+. gen l4_d_extreme_right_share_valid = l4.d_extreme_right_share_valid
+(6,295 missing values generated)
+
+. drop if year==2002
+(3,134 observations deleted)
+
+. 
+. gen post = 0 
+
+. replace post = 1 if year==2010
+(3,151 real changes made)
+
+. 
+. egen i = group(telnev_helyes)
+
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. gen treated = 0 
+
+. replace treated = 1 if treatment==2
+(18 real changes made)
+
+. la var treated "Attacked"
+
+. 
+. * control variable scaling
+. 
+. replace unemp = unemp/pop1859 *100
+variable unemp was long now double
+(6,267 real changes made)
+
+. replace taxpayers = taxpayers/pop1859*100
+(6,285 real changes made)
+
+. foreach v of varlist ig* kh07 de55 de62 {
+  2.         
+.         replace `v'=`v'/pop*100
+  3.         
+. 
+. }
+variable ig01 was long now double
+(6,162 real changes made)
+variable ig11 was long now double
+(5,703 real changes made)
+variable ig23 was int now float
+(5,876 real changes made)
+variable kh07 was long now double
+(6,292 real changes made)
+variable de55 was long now double
+(5,851 real changes made)
+variable de62 was long now double
+(6,264 real changes made)
+
+. 
+. 
+. 
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. 
+. drop unemp2008 
+
+. 
+. gen unemp2008 = mn/de09*100
+
+. 
+.         la var unemp2008 "Unemployment 2008m1-m5 avg."
+
+.         la var oda "Yearly inflow (pp), 2002-2007 avg."
+
+.         la var el "Yearly outflow (pp), 2002-2007 avg."
+
+.         la var kisgyerek "0-2 yr old / 1000, 2002-2007 avg."
+
+. 
+. local demo_extra = "kisgyerek el unemp2008"
+
+. 
+. 
+. 
+. eststo clear 
+
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23   , cluster(kist175)  
+
+Linear regression                               Number of obs     =      3,072
+                                                F(9, 173)         =       2.72
+                                                Prob > F          =     0.0055
+                                                R-squared         =     0.0219
+                                                Root MSE          =     7.4673
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.508371   2.662198     3.57   0.000     4.253802    14.76294
+     kisgyerek |  -.0129163   .0216767    -0.60   0.552    -.0557012    .0298686
+            el |   .0417653   .1105997     0.38   0.706    -.1765332    .2600637
+     unemp2008 |   .1066378   .0498539     2.14   0.034     .0082377    .2050379
+  mentions0708 |   .0015832   .0053451     0.30   0.767    -.0089667    .0121331
+roma_share2001 |  -1.246284   4.008651    -0.31   0.756    -9.158444    6.665877
+               |
+         unemp |
+           D1. |   .1075525   .0529477     2.03   0.044     .0030459    .2120591
+               |
+          ig01 |
+           D1. |   .0642381   .0567142     1.13   0.259    -.0477027     .176179
+               |
+          ig23 |
+           D1. |  -.1426815   .1394078    -1.02   0.308    -.4178407    .1324776
+               |
+         _cons |   14.48951   .9100142    15.92   0.000     12.69335    16.28567
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Whole country"
+
+added macro:
+               e(smpl) : "Whole country"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est1 stored)
+
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if donor_pool==1, cluster(kist175)  
+
+Linear regression                               Number of obs     =      1,955
+                                                F(9, 173)         =       2.44
+                                                Prob > F          =     0.0123
+                                                R-squared         =     0.0116
+                                                Root MSE          =     7.5909
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.031808   2.607681     3.46   0.001     3.884842    14.17877
+     kisgyerek |  -.0283777   .0284724    -1.00   0.320    -.0845756    .0278203
+            el |  -.0447656   .0973549    -0.46   0.646     -.236922    .1473908
+     unemp2008 |    .015942   .0490592     0.32   0.746    -.0808896    .1127736
+  mentions0708 |   .0120517   .0091674     1.31   0.190    -.0060427    .0301461
+roma_share2001 |   .8170577   3.708142     0.22   0.826    -6.501966    8.136082
+               |
+         unemp |
+           D1. |   .0514142   .0563095     0.91   0.362     -.059728    .1625563
+               |
+          ig01 |
+           D1. |   .0703317   .0613645     1.15   0.253    -.0507878    .1914511
+               |
+          ig23 |
+           D1. |   -.276121   .1717283    -1.61   0.110    -.6150734    .0628315
+               |
+         _cons |   17.42359   .9411831    18.51   0.000     15.56591    19.28127
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Donor pool"
+
+added macro:
+               e(smpl) : "Donor pool"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est2 stored)
+
+. 
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if treatment!=0, rob
+
+Linear regression                               Number of obs     =         13
+                                                F(9, 3)           =      15.81
+                                                Prob > F          =     0.0220
+                                                R-squared         =     0.9022
+                                                Root MSE          =     5.4938
+
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   17.72111   4.230388     4.19   0.025     4.258124    31.18409
+     kisgyerek |  -.3251617   .2659102    -1.22   0.309    -1.171407    .5210832
+            el |  -3.172356   1.571653    -2.02   0.137    -8.174059    1.829346
+     unemp2008 |   .0040653   .1506143     0.03   0.980    -.4752566    .4833872
+  mentions0708 |   1.071017   .5532467     1.94   0.148    -.6896605    2.831695
+roma_share2001 |  -71.19562   37.64441    -1.89   0.155    -190.9969     48.6057
+               |
+         unemp |
+           D1. |  -2.365611   .9172749    -2.58   0.082    -5.284789    .5535674
+               |
+          ig01 |
+           D1. |   4.526432   2.830407     1.60   0.208    -4.481185    13.53405
+               |
+          ig23 |
+           D1. |  -6.966339   2.759618    -2.52   0.086    -15.74867    1.815997
+               |
+         _cons |   47.39911   11.32539     4.19   0.025     11.35665    83.44157
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Planned attack"
+
+added macro:
+               e(smpl) : "Planned attack"
+
+. estadd local serr "Robust"
+
+added macro:
+               e(serr) : "Robust"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est3 stored)
+
+. 
+. 
+. esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _cons )  se(3) b(3)
+>  ///
+>  mgroups("$\Delta$(Extreme right vote share 2010-2006, pp.) in 9 attacked settlements", pattern
+> (1 0 0 ) ///
+>  prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+>   collabels(none)  ///
+>    replace label nonotes   scalars(     "r2 $ R^2 $" N  "smpl Control group" ///
+>                         "serr Standard errors" ///
+>                         "controls Covariates" ///
+>                         )    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+(output written to ../replication_evidence/did1_extra_demo.tex)
+
+. copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa12.tex", replace
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\agaspar\AppData\Local\Temp\STD361c_000000.tmp"
+
+. * this script generates the version of Table 1 with additional controls in the 
+. * Appendix
+. 
+. 
+. 
+. 
+. use ${temp}/analysis_data_set.dta, clear
+
+. 
+. 
+. /*
+> 
+>         Exhibit A: Difference-in-differences for 2006-2010
+> 
+> */
+. 
+. keep if year==2002|year==2006|year==2010
+(47,431 observations deleted)
+
+. drop if tazon==. // these settlements did not exist in given year
+(39 observations deleted)
+
+. tsset tazon year
+
+Panel variable: tazon (unbalanced)
+ Time variable: year, 2002 to 2010, but with gaps
+         Delta: 1 unit
+
+. gen d_extreme_right_share_valid = (extreme_right_share_valid - l4.extreme_right_share_valid)*10
+> 0
+(3,151 missing values generated)
+
+. gen l4_d_extreme_right_share_valid = l4.d_extreme_right_share_valid
+(6,295 missing values generated)
+
+. drop if year==2002
+(3,134 observations deleted)
+
+. 
+. gen post = 0 
+
+. replace post = 1 if year==2010
+(3,151 real changes made)
+
+. 
+. egen i = group(telnev_helyes)
+
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. gen treated = 0 
+
+. replace treated = 1 if treatment==2
+(18 real changes made)
+
+. la var treated "Attacked"
+
+. 
+. * control variable scaling
+. 
+. replace unemp = unemp/pop1859 *100
+variable unemp was long now double
+(6,267 real changes made)
+
+. replace taxpayers = taxpayers/pop1859*100
+(6,285 real changes made)
+
+. foreach v of varlist ig* kh07 de55 de62 {
+  2.         
+.         replace `v'=`v'/pop*100
+  3.         
+. 
+. }
+variable ig01 was long now double
+(6,162 real changes made)
+variable ig11 was long now double
+(5,703 real changes made)
+variable ig23 was int now float
+(5,876 real changes made)
+variable kh07 was long now double
+(6,292 real changes made)
+variable de55 was long now double
+(5,851 real changes made)
+variable de62 was long now double
+(6,264 real changes made)
+
+. 
+. 
+. 
+. tsset i post
+
+Panel variable: i (unbalanced)
+ Time variable: post, 0 to 1
+         Delta: 1 unit
+
+. 
+. 
+. 
+. local demo_extra = "kisgyerek el unemp2008"
+
+. 
+. 
+. 
+. eststo clear 
+
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23   , cluster(kist175)  
+
+Linear regression                               Number of obs     =      3,072
+                                                F(9, 173)         =       2.69
+                                                Prob > F          =     0.0059
+                                                R-squared         =     0.0212
+                                                Root MSE          =     7.4699
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.509689   2.659521     3.58   0.000     4.260403    14.75898
+     kisgyerek |  -.0141546   .0217446    -0.65   0.516    -.0570734    .0287643
+            el |   .0423137   .1105383     0.38   0.702    -.1758636     .260491
+     unemp2008 |   .1048102   .0509475     2.06   0.041     .0042515    .2053689
+  mentions0708 |    .001585   .0053503     0.30   0.767    -.0089752    .0121452
+roma_share2001 |   -1.14922   4.041011    -0.28   0.776    -9.125252    6.826812
+               |
+         unemp |
+           D1. |    .109397   .0530315     2.06   0.041      .004725     .214069
+               |
+          ig01 |
+           D1. |   .0643982   .0565508     1.14   0.256    -.0472201    .1760164
+               |
+          ig23 |
+           D1. |  -.1450261   .1388139    -1.04   0.298     -.419013    .1289608
+               |
+         _cons |   14.54888   .9079947    16.02   0.000     12.75671    16.34106
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Whole country"
+
+added macro:
+               e(smpl) : "Whole country"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est1 stored)
+
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if donor_pool==1, cluster(kist175)  
+
+Linear regression                               Number of obs     =      1,955
+                                                F(9, 173)         =       2.42
+                                                Prob > F          =     0.0129
+                                                R-squared         =     0.0115
+                                                Root MSE          =     7.5912
+
+                                (Std. err. adjusted for 174 clusters in kist175)
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   9.024297   2.610689     3.46   0.001     3.871393     14.1772
+     kisgyerek |  -.0282942   .0286165    -0.99   0.324    -.0847766    .0281882
+            el |  -.0444727   .0969484    -0.46   0.647    -.2358266    .1468812
+     unemp2008 |   .0135764   .0503578     0.27   0.788    -.0858183    .1129711
+  mentions0708 |    .012044    .009157     1.32   0.190    -.0060299    .0301178
+roma_share2001 |   .9341225   3.753463     0.25   0.804    -6.474355      8.3426
+               |
+         unemp |
+           D1. |   .0516741   .0564568     0.92   0.361    -.0597587    .1631069
+               |
+          ig01 |
+           D1. |   .0704742   .0613289     1.15   0.252     -.050575    .1915234
+               |
+          ig23 |
+           D1. |  -.2755179   .1719371    -1.60   0.111    -.6148825    .0638467
+               |
+         _cons |   17.44921    .945042    18.46   0.000     15.58391    19.31451
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Donor pool"
+
+added macro:
+               e(smpl) : "Donor pool"
+
+. estadd local serr "Clustered"
+
+added macro:
+               e(serr) : "Clustered"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est2 stored)
+
+. 
+. 
+. reg d_extreme_right_share_valid treated `demo_extra' mentions0708 roma_share2001 d.unemp  d.ig0
+> 1 d.ig23 if treatment!=0, rob
+
+Linear regression                               Number of obs     =         13
+                                                F(9, 3)           =      15.62
+                                                Prob > F          =     0.0224
+                                                R-squared         =     0.9022
+                                                Root MSE          =     5.4938
+
+--------------------------------------------------------------------------------
+               |               Robust
+d_extreme_ri~d | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+---------------+----------------------------------------------------------------
+       treated |   17.77235    4.27414     4.16   0.025     4.170132    31.37457
+     kisgyerek |  -.3205519   .2642685    -1.21   0.312    -1.161572    .5204685
+            el |  -3.179777   1.558569    -2.04   0.134    -8.139837    1.780284
+     unemp2008 |  -.0041058   .1433831    -0.03   0.979    -.4604148    .4522031
+  mentions0708 |   1.069058   .5489815     1.95   0.147    -.6780459    2.816162
+roma_share2001 |  -71.58357   37.34429    -1.92   0.151    -190.4298    47.26263
+               |
+         unemp |
+           D1. |  -2.372991   .9044431    -2.62   0.079    -5.251333    .5053505
+               |
+          ig01 |
+           D1. |   4.531954   2.816224     1.61   0.206    -4.430527    13.49444
+               |
+          ig23 |
+           D1. |   -6.97154    2.72893    -2.55   0.084    -15.65621    1.713133
+               |
+         _cons |    47.4183   11.29523     4.20   0.025     11.47184    83.36476
+--------------------------------------------------------------------------------
+
+. estadd local smpl "Planned attack"
+
+added macro:
+               e(smpl) : "Planned attack"
+
+. estadd local serr "Robust"
+
+added macro:
+               e(serr) : "Robust"
+
+. estadd local controls "Yes"
+
+added macro:
+           e(controls) : "Yes"
+
+. eststo
+(est3 stored)
+
+. 
+. 
+. esttab  using "${tabledir}/did1_extra_demo.tex", keep( treated `demo_extra' _cons )  se(3) b(3)
+>  ///
+>  mgroups("$\Delta$(Extreme right vote share 2010-2006, pp.) in 9 attacked settlements", pattern
+> (1 0 0 ) ///
+>  prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+>   collabels(none)  ///
+>    replace label nonotes   scalars(     "r2 $ R^2 $" N  "smpl Control group" ///
+>                         "serr Standard errors" ///
+>                         "controls Covariates" ///
+>                         )    star(* 0.10 ** 0.05 *** 0.01) staraux nomtitles
+(output written to ../replication_evidence/did1_extra_demo.tex)
+
+. copy "${tabledir}/did1_extra_demo.tex" "${tabledir}/table_oa12.tex", replace
+
+. 
+. 
+. 
+end of do-file
+

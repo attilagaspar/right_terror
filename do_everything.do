@@ -20,28 +20,18 @@ Memory	32,0 GB
 
 */
 
-* set this to where you extract the code folder
-cd "C:\Users\agaspar\Dropbox\research\rightterror\replication_package"
 
-* required packages: synth, spmap, maptile, sensemakr
-*ssc install synth 
-*ssc install spmap 
-*ssc install maptile
-*ssc install sensemakr
+/*
 
-* set up logging
-cap log close
-log using replication_log.txt , text replace
+RAW DATA ---> ANALYSIS DATA
 
-* working data dir
-global temp = "../replication_data"
-cap mkdir ${temp}
-cap mkdir ${temp}/synth 
+Raw data is not shared as part of the replication repository but is available 
+upon request. The scripts that genererate the analysis data set from raw data
+are public.
 
+Raw data should be used in this folder structure:
+*/
 * election raw data dir
-* 	The raw election data is not part of the replication package but we
-*	provide the source where it can be downloaded and how our derived data set 
-*   can be generated from there. Once downloaded, they should be placed here.
 global election = "../data/election"
 
 * settlement distances raw data dir
@@ -69,6 +59,61 @@ global parlgov = "../data/parlgov"
 global unemp = "../data/unemp"
 
 
+* data generation output dir
+global temp = "../replication_input_data"
+*cap mkdir ${temp}
+
+* required packages: synth, spmap, maptile, sensemakr
+*ssc install synth 
+*ssc install spmap 
+*ssc install maptile
+*ssc install sensemakr
+
+/*
+
+	Scripts for data generation
+
+*/
+
+* Append election panel from raw data files - the generation script is part of the package
+* 		but the original raw CSV/Excel files are not. 
+* This script produces ../replication_data/election_panel.dta
+*do append_elections_from_raw_data_files.do
+
+* generate treatment variable
+*do create_treatment_var.do
+
+* generate far-right portal mentions (VERY SLOW)
+*do kuruc_generator.do
+
+* generate analysis data file
+*do merge_data_sources.do
+
+
+
+/*
+
+RESULT REPLICATION STARTS HERE
+
+*/
+
+
+* set this to where you extract the code folder
+*cd "C:\Users\agaspar\Dropbox\research\rightterror\replication_package"
+
+
+* set up logging
+cap log close
+log using replication_log.txt , text replace
+
+
+* analysis input data dir
+global temp = "../replication_input_data"
+*cap mkdir ${temp}
+
+* data generated through the analysis process 
+global derived = "../replication_derived_data"
+cap mkdir ${temp}/synth 
 
 * outputs: tables folder
 global tabledir = "../replication_evidence"
@@ -88,27 +133,6 @@ copy "${map}/ksh4_bpker_database.dta"  "`geopath'ksh4_bpker_database.dta", repla
 copy "${map}/ksh4_bpker_coords.dta"    "`geopath'ksh4_bpker_coords.dta", replace
 copy "${map}/ksh4_bpker_maptile.ado"           "`geopath'ksh4_bpker_maptile.ado", replace
 
-
-
-/*
-
-	generate data
-
-*/
-
-* Append election panel from raw data files - the generation script is part of the package
-* 		but the original raw CSV/Excel files are not. 
-* This script produces ../replication_data/election_panel.dta
-* do append_elections_from_raw_data_files.do
-
-* generate treatment variable
-do create_treatment_var.do
-
-* generate far-right portal mentions (VERY SLOW)
-*do kuruc_generator.do
-
-* generate analysis data file
-do merge_data_sources.do
 
 * generate synthetic contrsols
 do synth_control_generation.do

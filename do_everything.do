@@ -49,8 +49,7 @@ global kuruc = "../data/kuruc"
 * social attitudes survey raw data dir
 global survey = "../data/survey2009"
 
-* map data location
-global map = "../data/map"
+
 
 * parlgov data location
 global parlgov = "../data/parlgov"
@@ -109,7 +108,9 @@ log using replication_log.txt , text replace
 
 * analysis input data dir
 global temp = "../replication_input_data"
-*cap mkdir ${temp}
+* map data location
+global map = "${temp}}/map"
+
 
 * data generated through the analysis process 
 global derived = "../replication_derived_data"

@@ -109,7 +109,7 @@ log using replication_log.txt , text replace
 * analysis input data dir
 global temp = "../replication_input_data"
 * map data location
-global map = "${temp}}/map"
+global map = "${temp}/map"
 
 
 * data generated through the analysis process 

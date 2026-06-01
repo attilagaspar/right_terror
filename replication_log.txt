@@ -20090,3 +20090,4 @@ added macro:
 . 
 end of do-file
 
+. exit, clear

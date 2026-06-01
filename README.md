@@ -70,9 +70,12 @@ ssc install sensemakr
 
 ## Data Requirements
 
-The replication code expects the following data directories (relative to the code folder):
+The replication code expects the following data directory (relative to the code folder):
 
-- `../replication_data/` - Working directory for processed data
+- `../replication_data/` - Working directory for processed data in PSRM dataverse
+
+Raw data should be placed in this structure in order to re-generate the public files:
+
 - `../data/election/` - Raw election data
 - `../data/distances/` - Settlement distance data
 - `../data/` - Census Roma share data

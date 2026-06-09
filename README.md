@@ -32,6 +32,8 @@ ssc install sensemakr
 
 ## File Structure
 
+Note: the codebase is frozen into the replication package in its 06/09/2026 status. It is also available as a repository at https://github.com/attilagaspar/right_terror .
+
 ### Main Scripts
 - `do_everything.do` - Master script that runs the entire replication
 - `replication_log.txt` - Log file generated during replication
@@ -74,7 +76,7 @@ The replication code expects the following data directory (relative to the code 
 
 - `../replication_data/` - Working directory for processed data in PSRM dataverse
 
-Raw data should be placed in this structure in order to re-generate the public files:
+Raw data (available upon request) should be placed in this structure in order to re-generate the public files:
 
 - `../data/election/` - Raw election data
 - `../data/distances/` - Settlement distance data
@@ -137,4 +139,4 @@ For questions about the replication code, please contact the authors.
 
 ---
 
-*Last updated: January 2026*
+*Last updated: June 2026*

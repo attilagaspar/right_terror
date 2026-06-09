@@ -84,7 +84,8 @@ la var ig23 "Residents with criminal record at location"
 la var unemp "Unemployment rate"
 
 eststo clear 
-reg d_extreme_right_share_valid treated   if unemp!=.&roma_share2001!=.&ig01!=.&ig23!=. , cluster(kist175)  
+reg d_extreme_right_share_valid treated   if d.unemp!=.&roma_share2001!=.&ig01!=.&ig23!=. , cluster(kist175)  
+
 estadd local smpl "Whole country"
 estadd local serr "Clustered"
 estadd local controls "No"

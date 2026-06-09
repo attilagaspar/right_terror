@@ -52,7 +52,7 @@ copy "${tabledir}/synthetic_control_units_1.tex" "${tabledir}/table_oa2.tex", re
 restore, preserve
 keep if _n>46
 listtex using "${tabledir}/synthetic_control_units_2.tex", replace
-copy "${tabledir}/synthetic_control_units_2.tex" "${tabledir}/table_oa3.tex", replace
+copy "${tabledir}/synthetic_control_units_2.tex" "${tabledir}/table_oa2-continued.tex", replace
 restore
 
 keep _Co_name

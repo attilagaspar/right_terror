@@ -74,7 +74,8 @@ Note: the codebase is frozen into the replication package in its 06/09/2026 stat
 
 The replication code expects the following data directory (relative to the code folder):
 
-- `../replication_data/` - Working directory for processed data in PSRM dataverse
+- `../replication_input_data/` - Working directory for processed data in PSRM dataverse
+- `replication_input_package` - The code folder (identical with the repository)
 
 Raw data (available upon request) should be placed in this structure in order to re-generate the public files:
 
